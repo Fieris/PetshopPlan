@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.fieris.petshopplan.controllers.MainController">
+   <children>
+       <MenuBar layoutY="2.0">
+           <Menu mnemonicParsing="false" text="Файл">
+                <items>
+                    <MenuItem mnemonicParsing="false" onAction="#openExcelFile" text="Открыть Excel..." />
+               <MenuItem fx:id="miSearchAndCalcButton" disable="true" mnemonicParsing="false" onAction="#searchAndCalc" text="Пересчёт" />
+                </items>
+           </Menu>
+         <Menu mnemonicParsing="false" text="Настройки">
+           <items>
+             <MenuItem mnemonicParsing="false" onAction="#openProgramSettings" text="Настройки программы..." />
+               <MenuItem mnemonicParsing="false" onAction="#openFilterSettings" text="Настройки поиска..." />
+           </items>
+         </Menu>
+         <Menu mnemonicParsing="false" text="Дополнительно">
+           <items>
+             <MenuItem mnemonicParsing="false" onAction="#openGoogleTablePlans" text="Открыть таблицу плану" />
+           </items>
+         </Menu>
+       </MenuBar>
+      <Label fx:id="lblDate" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="745.0" layoutY="14.0" prefHeight="25.0" prefWidth="135.0" text="Дата" visible="false">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <TabPane fx:id="mainPane" layoutX="33.0" layoutY="38.0" prefHeight="656.0" prefWidth="927.0" tabClosingPolicy="UNAVAILABLE" />
+   </children>
+</AnchorPane>
