@@ -14,7 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class JsonMapper {
-    private static final File outputFile = new File("PlanData.json");
+    private static final String programDirectory = System.getProperty("user.home");
+    private static final File outputFile = new File(programDirectory + "/PlanData.json");
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ObjectWriter objectWriter = objectMapper.writer(new DefaultPrettyPrinter());
     //private static final TablePlanData tablePlanData = initialize();

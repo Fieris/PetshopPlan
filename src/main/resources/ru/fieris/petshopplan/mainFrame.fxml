@@ -25,7 +25,7 @@
          </Menu>
          <Menu mnemonicParsing="false" text="Дополнительно">
            <items>
-             <MenuItem mnemonicParsing="false" onAction="#openGoogleTablePlans" text="Открыть таблицу плану" />
+             <MenuItem mnemonicParsing="false" onAction="#openGoogleTablePlans" text="Открыть таблицу планов" />
            </items>
          </Menu>
        </MenuBar>

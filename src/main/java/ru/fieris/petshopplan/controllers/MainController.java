@@ -9,6 +9,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.converter.LocalDateStringConverter;
 import ru.fieris.petshopplan.Application;
 import ru.fieris.petshopplan.actionevents.MenuItemExcelOpenAction;
 import ru.fieris.petshopplan.customControls.HBoxes.*;
@@ -25,12 +26,16 @@ import ru.fieris.petshopplan.json.categories.conditionCategory.ConditionCategory
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+import java.util.TimeZone;
 
 public class MainController {
     //Главный pane
@@ -45,7 +50,6 @@ public class MainController {
     public ExcelConverter getExcelConverter() {
         return excelConverter;
     }
-
 
     //Вкладка Файл->открыть excel...
     @FXML
@@ -170,10 +174,15 @@ public class MainController {
         miSearchAndCalcButton.setDisable(false);
         Application.getMainStage().setTitle("Планы - " + file.getAbsolutePath());
 
-        //Записывает время открытия в label
-        LocalDateTime date = LocalDateTime.now();
-        lblDate.setVisible(true);
-        lblDate.setText(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        //Записывает время создания файла в label
+        try{
+            FileTime creationTime = (FileTime) Files.getAttribute(file.toPath(), "creationTime");
+            LocalDateTime date = LocalDateTime.ofInstant(creationTime.toInstant(), TimeZone.getDefault().toZoneId());
+            lblDate.setVisible(true);
+            lblDate.setText(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        } catch (IOException exc){
+            System.out.println("не удалось считать время открытия файла" + exc);
+        }
 
         //Записывает данные файла и данные открытия в Excel файл
         jsonData.setLastOpenedFile(file);
@@ -203,10 +212,17 @@ public class MainController {
         Application.getMainStage().setTitle("Планы - " + file.getAbsolutePath());
 
 
-        //Записывает время открытия в label
-        LocalDateTime date = LocalDateTime.now();
-        lblDate.setVisible(true);
-        lblDate.setText(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        //Записывает время создания файла в label
+        try{
+            FileTime creationTime = (FileTime) Files.getAttribute(file.toPath(), "creationTime");
+            LocalDateTime date = LocalDateTime.ofInstant(creationTime.toInstant(), TimeZone.getDefault().toZoneId());
+            lblDate.setVisible(true);
+            lblDate.setText(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        } catch (IOException exc){
+            System.out.println("не удалось считать время открытия файла" + exc);
+        }
+
+
 
         //Записывает данные файла и данные открытия в Excel файл
         jsonData.setLastOpenedFile(file);
@@ -216,6 +232,7 @@ public class MainController {
 
         searchAndCalc();
     }
+
 
 
     //Поиск, подсчет и вставка планов (итоговый скрипт)
@@ -292,7 +309,7 @@ public class MainController {
         WebView webView = new WebView();
         Scene scene = new Scene(webView);
         stage.setScene(scene);
-        webView.getEngine().load("https://www.google.com");
+        webView.getEngine().load("https://docs.google.com/spreadsheets/d/1995oScgcL_OluFNSLkGGUjl2AGYckT3rmz9tO_FP7tw/edit?usp=sharing");
         stage.show();
     }
 }
