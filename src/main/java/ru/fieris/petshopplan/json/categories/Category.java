@@ -8,6 +8,7 @@ public abstract class Category{
     protected double planValue;
     protected Date planChangeDate = new Date();
     protected boolean hidden = false;
+    protected ZpProperty zpProperty;
 
     public String getCategoryName() {
         return categoryName;
@@ -39,5 +40,13 @@ public abstract class Category{
 
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
+    }
+
+    public ZpProperty getZpProperty() {
+        return zpProperty;
+    }
+
+    public void setZpProperty(ZpProperty zpProperty) {
+        this.zpProperty = zpProperty;
     }
 }

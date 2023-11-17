@@ -1,7 +1,9 @@
 package ru.fieris.petshopplan.controllers;
 
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -10,6 +12,7 @@ import ru.fieris.petshopplan.Application;
 import ru.fieris.petshopplan.json.*;
 import ru.fieris.petshopplan.json.categories.PrimaryBrandCategory;
 import ru.fieris.petshopplan.json.categories.SecondaryBrandCategory;
+import ru.fieris.petshopplan.json.categories.ZpProperty;
 import ru.fieris.petshopplan.json.categories.conditionCategory.ConditionCategory;
 
 import java.util.ArrayList;
@@ -39,6 +42,13 @@ public class FilterSettingsController {
     private ListView<String> lsSecondaryBrandCategories;
     @FXML
     private ListView<String> lsSecondaryBrandNames;
+
+    @FXML
+    private ChoiceBox<String> primaryZpTypeCB;
+    @FXML
+    private ChoiceBox<String> secondaryZpTypeCB;
+    @FXML
+    private ChoiceBox<String> conditionZpTypeCB;
 
 
     @FXML
@@ -74,28 +84,83 @@ public class FilterSettingsController {
         lsSecondaryBrandCategories.setItems(secondaryBrandCategories);
 
 
+        //заполнение чекбоксов с типом ЗП
         lsPrimaryBrandCategories.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             int selectedIndex = lsPrimaryBrandCategories.getSelectionModel().getSelectedIndex();
             if (selectedIndex == -1) return;
 
+
+            primaryZpTypeCB.getItems().clear();
+            for (ZpProperty zpProperty : jsonData.getPrimaryBrandCategories().get(0).getZpProperty().getAllTypes()) {
+                primaryZpTypeCB.getItems().add(zpProperty.getName());
+            }
+
+            if (Objects.nonNull(jsonData.getPrimaryBrandCategories().get(selectedIndex).getZpProperty())) {
+                primaryZpTypeCB.getSelectionModel().select(jsonData.getPrimaryBrandCategories().get(selectedIndex).getZpProperty().getName());
+            } else {
+                primaryZpTypeCB.getSelectionModel().select("[Не указан]");
+            }
+
+            primaryZpTypeCB.getSelectionModel().selectedItemProperty().addListener((observableValue1, oldValue1, newValue1) -> {
+                if (primaryZpTypeCB.getItems().isEmpty()) return;
+                jsonData.getPrimaryBrandCategories().get(lsPrimaryBrandCategories.getSelectionModel().getSelectedIndex()).setZpProperty(ZpProperty.ALLTO.findByName(newValue1));
+                JsonMapper.writeToJson(jsonData);
+            });
+
             ObservableList<String> brandNames = FXCollections.observableArrayList(jsonData.getPrimaryBrandCategories().get(selectedIndex).getBrandNames());
             lsPrimaryBrandNames.setItems(brandNames);
-        });
-
-        lsConditionCategories.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
-            int selectedIndex = lsConditionCategories.getSelectionModel().getSelectedIndex();
-            if (selectedIndex == -1) return;
-
-            lsConditionInfo.setText(jsonData.getConditionCategories().get(selectedIndex).getConditionType().getInfo());
         });
 
         lsSecondaryBrandCategories.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
             int selectedIndex = lsSecondaryBrandCategories.getSelectionModel().getSelectedIndex();
             if (selectedIndex == -1) return;
 
+            secondaryZpTypeCB.getItems().clear();
+            for(ZpProperty zpProperty : jsonData.getPrimaryBrandCategories().get(0).getZpProperty().getAllTypes()){
+                secondaryZpTypeCB.getItems().add(zpProperty.getName());
+            }
+
+            if(Objects.nonNull(jsonData.getSecondaryBrandCategories().get(selectedIndex).getZpProperty())){
+                secondaryZpTypeCB.getSelectionModel().select(jsonData.getSecondaryBrandCategories().get(selectedIndex).getZpProperty().getName());
+            } else {
+                secondaryZpTypeCB.getSelectionModel().select("[Не указан]");
+            }
+
+            secondaryZpTypeCB.getSelectionModel().selectedItemProperty().addListener((observableValue1, oldValue1, newValue1) -> {
+                if(secondaryZpTypeCB.getItems().isEmpty()) return;
+                jsonData.getSecondaryBrandCategories().get(lsSecondaryBrandCategories.getSelectionModel().getSelectedIndex()).setZpProperty(ZpProperty.ALLTO.findByName(newValue1));
+                JsonMapper.writeToJson(jsonData);
+            });
+
             ObservableList<String> brandNames = FXCollections.observableArrayList(jsonData.getSecondaryBrandCategories().get(selectedIndex).getBrandNames());
             lsSecondaryBrandNames.setItems(brandNames);
         });
+
+        lsConditionCategories.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+            int selectedIndex = lsConditionCategories.getSelectionModel().getSelectedIndex();
+            if (selectedIndex == -1) return;
+
+            conditionZpTypeCB.getItems().clear();
+            for (ZpProperty zpProperty : jsonData.getConditionCategories().get(0).getZpProperty().getAllTypes()) {
+                conditionZpTypeCB.getItems().add(zpProperty.getName());
+            }
+
+            if (Objects.nonNull(jsonData.getConditionCategories().get(selectedIndex).getZpProperty())) {
+                conditionZpTypeCB.getSelectionModel().select(jsonData.getConditionCategories().get(selectedIndex).getZpProperty().getName());
+            } else {
+                primaryZpTypeCB.getSelectionModel().select("[Не указан]");
+            }
+
+            conditionZpTypeCB.getSelectionModel().selectedItemProperty().addListener((observableValue1, oldValue1, newValue1) -> {
+                if (conditionZpTypeCB.getItems().isEmpty()) return;
+                jsonData.getConditionCategories().get(lsConditionCategories.getSelectionModel().getSelectedIndex()).setZpProperty(ZpProperty.ALLTO.findByName(newValue1));
+                JsonMapper.writeToJson(jsonData);
+            });
+
+            lsConditionInfo.setText(jsonData.getConditionCategories().get(selectedIndex).getConditionType().getInfo());
+        });
+
+
 
 
         //в каждом табе в левом листе выбирается 0 элемент, чтобы избежать ошибок
@@ -390,7 +455,9 @@ public class FilterSettingsController {
     //TODO пока работает только с conditionCategory
     //последний выбранный индекс
     int lastSelectedIndex = 0;
-    @FXML private void hideCategory() {
+
+    @FXML
+    private void hideCategory() {
         Alert alert;
         JsonData jsonData = JsonMapper.readFromJson();
         boolean hidden;

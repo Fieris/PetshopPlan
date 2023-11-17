@@ -5,6 +5,7 @@ import ru.fieris.petshopplan.json.JsonData;
 import ru.fieris.petshopplan.json.JsonMapper;
 import ru.fieris.petshopplan.json.categories.Category;
 import ru.fieris.petshopplan.json.categories.SecondaryBrandCategory;
+import ru.fieris.petshopplan.json.categories.ZpProperty;
 import ru.fieris.petshopplan.json.categories.conditionCategory.ConditionCategory;
 
 import java.time.LocalDate;
@@ -20,49 +21,11 @@ public class Calculator {
         this.arrayList = arrayList;
     }
 
-    @Deprecated
-    public double calculateSum() {
-        Iterator<ExcelSellLine> iterator = arrayList.listIterator();
-        double sum = 0;
-
-        while (iterator.hasNext()) {
-            sum += iterator.next().getTotalPriceExcludingBonuses();
-        }
-
-        return sum;
-    }
-
-    @Deprecated
-    public double calculateSumWithBonuses() {
-        Iterator<ExcelSellLine> iterator = arrayList.listIterator();
-        double sum = 0;
-
-        while (iterator.hasNext()) {
-            ExcelSellLine sellString = iterator.next();
-            sum += sellString.getTotalPriceExcludingBonuses() + sellString.getSpentPetshopBonuses() + sellString.getSpentSpasiboBonuses();
-        }
-
-        return sum;
-    }
-
     public String getShopName() {
         return arrayList.get(0).getShop();
     }
 
-    @Deprecated
-    public double getGoNowFact() {
-        double result = 0;
-        for (ExcelSellLine line : arrayList) {
-            if (line.getManufacturer().equals("GO!")) {
-                result += line.getTotalPriceExcludingBonuses() + line.getSpentSpasiboBonuses() + line.getSpentPetshopBonuses();
-            } else if (line.getManufacturer().equals("NOW FRESH")) {
-                result += line.getTotalPriceExcludingBonuses() + line.getSpentSpasiboBonuses() + line.getSpentPetshopBonuses();
-            }
-        }
-        return result;
-    }
-
-    //Получает название бренда и считает процент выполнения.
+    //считает процент выполнения.
     public double getPercent(double planValue, double factValue) {
         if (planValue == 0 || factValue == 0) {
             return 0;
@@ -180,7 +143,7 @@ public class Calculator {
         double result = 0;
 
         //Если осталось меньше 0, значит план перевыполнен -> возвращает -1
-        if (remains <= 0) return -1;
+//        if (remains <= 0) return -1;
 
         int daysLeft = date.lengthOfMonth() - date.getDayOfMonth() + 1;
 
@@ -188,7 +151,118 @@ public class Calculator {
         if (daysLeft == 0) return remains;
 
 
-        result = (remains - getFactToday(category)) / daysLeft;
+        result = (remains + getFactToday(category)) / daysLeft;
+
+        return result;
+    }
+
+    public double getZpPercent(double donePercent, ZpProperty zpProperty){
+        if(Objects.isNull(zpProperty)) return 0;
+        double result = 0;
+        switch (zpProperty){
+            case VIA:
+                if(donePercent >= 100){
+                    result = 5;
+                } else {
+                    result = 2;
+                }
+                break;
+            case RC:
+            case ALLTO:
+                result = 0;
+                break;
+            case HILLS:
+                if(donePercent >= 100){
+                    result = 4;
+                } else {
+                    result = 0;
+                }
+                break;
+            case ALWAYS2:
+                result = 2;
+                break;
+            case ALWAYS5:
+                result = 5;
+                break;
+            case STD_2_3_5:
+                if(donePercent >= 100){
+                    result = 5;
+                } else if (donePercent >= 85 && donePercent < 99) {
+                    result = 3;
+                } else {
+                    result = 2;
+                }
+                break;
+            case STD_2_3_6:
+                if(donePercent >= 100){
+                    result = 6;
+                } else if (donePercent >= 85 && donePercent < 99) {
+                    result = 3;
+                } else {
+                    result = 2;
+                }
+                break;
+            case STD_2_4_6:
+                if(donePercent >= 100){
+                    result = 6;
+                } else if (donePercent >= 85 && donePercent < 99) {
+                    result = 4;
+                } else {
+                    result = 2;
+                }
+                break;
+            case PURINA:
+                if(donePercent >= 100){
+                    result = 3;
+                } else if (donePercent >= 95 && donePercent < 99.99) {
+                    result = 2;
+                } else if (donePercent >= 90 && donePercent < 94.99) {
+                    result = 1;
+                } else {
+                    result = 0;
+                }
+                break;
+            case ZERO:
+                result = 0;
+                break;
+        }
+
+        return result;
+    }
+
+    public double getZpPerMan(double fact,double donePercent, double zpPercent, ZpProperty zpProperty){
+        double result = 0;
+        if(zpProperty == ZpProperty.RC){
+            if(donePercent >= 100){
+                return 2000;
+            } else {
+                return 0;
+            }
+        }
+        
+        if(zpProperty == ZpProperty.ALLTO){
+            if(donePercent >= 104){
+                return 6750;
+            } else if (donePercent >= 100 && donePercent <= 103.99) {
+                return 5500;
+            } else if (donePercent >= 95 && donePercent <= 99.99) {
+                return 3500;
+            } else if (donePercent >= 90 && donePercent <= 94.99) {
+                return 2500;
+            } else if (donePercent >= 85 && donePercent <= 89.99) {
+                return 1000;
+            } else {
+                return 0;
+            }
+        }
+
+        try{
+            result = fact * zpPercent / 100 / jsonData.getNumberOfEmployers();
+        } catch (Exception exc){
+            System.out.println(exc);
+        }
+
+
 
         return result;
     }

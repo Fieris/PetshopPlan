@@ -20,7 +20,7 @@
          <Menu mnemonicParsing="false" text="Настройки">
            <items>
              <MenuItem mnemonicParsing="false" onAction="#openProgramSettings" text="Настройки программы..." />
-               <MenuItem mnemonicParsing="false" onAction="#openFilterSettings" text="Настройки поиска..." />
+               <MenuItem mnemonicParsing="false" onAction="#openFilterSettings" text="Настройки категорий..." />
            </items>
          </Menu>
          <Menu mnemonicParsing="false" text="Дополнительно">

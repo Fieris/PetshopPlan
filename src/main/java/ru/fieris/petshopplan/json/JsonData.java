@@ -9,11 +9,12 @@ import java.util.Date;
 
 //POJO class
 public class JsonData {
+    private int numberOfEmployers;
     private File lastOpenedFile;
-    private Date lastOpenedDate;
     private ArrayList<PrimaryBrandCategory> primaryBrandCategories;
     private ArrayList<ConditionCategory> conditionCategories;
     private ArrayList<SecondaryBrandCategory> secondaryBrandCategories;
+
 
 
     public ArrayList<PrimaryBrandCategory> getPrimaryBrandCategories() {
@@ -46,11 +47,11 @@ public class JsonData {
         this.lastOpenedFile = lastOpenedFile;
     }
 
-    public Date getLastOpenedDate() {
-        return lastOpenedDate;
+    public int getNumberOfEmployers() {
+        return numberOfEmployers;
     }
 
-    public void setLastOpenedDate(Date lastOpenedDate) {
-        this.lastOpenedDate = lastOpenedDate;
+    public void setNumberOfEmployers(int numberOfEmployers) {
+        this.numberOfEmployers = numberOfEmployers;
     }
 }

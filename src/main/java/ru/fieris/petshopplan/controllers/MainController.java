@@ -9,40 +9,36 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.converter.LocalDateStringConverter;
 import ru.fieris.petshopplan.Application;
 import ru.fieris.petshopplan.actionevents.MenuItemExcelOpenAction;
 import ru.fieris.petshopplan.customControls.HBoxes.*;
-import ru.fieris.petshopplan.customControls.HBoxes.PlanHBoxes.ConditionHBox;
-import ru.fieris.petshopplan.customControls.HBoxes.PlanHBoxes.PlanHBox;
-import ru.fieris.petshopplan.customControls.HBoxes.PlanHBoxes.PrimaryBrandNameHBox;
-import ru.fieris.petshopplan.customControls.HBoxes.PlanHBoxes.SecondaryBrandNameHBox;
+import ru.fieris.petshopplan.customControls.HBoxes.PlanHBoxes.*;
 import ru.fieris.petshopplan.excel.Calculator;
 import ru.fieris.petshopplan.excel.ExcelConverter;
 import ru.fieris.petshopplan.json.*;
 import ru.fieris.petshopplan.json.categories.PrimaryBrandCategory;
 import ru.fieris.petshopplan.json.categories.SecondaryBrandCategory;
+import ru.fieris.petshopplan.json.categories.ZpProperty;
 import ru.fieris.petshopplan.json.categories.conditionCategory.ConditionCategory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
 
 public class MainController {
+    //TODO Если это инстанс примари или кондишн, то просто копирует то же поле на третий таб, не создавая новый??
     //Главный pane
     @FXML
     private TabPane mainPane = new TabPane();
     //Тут хранятся все Hbox
-    ArrayList<CustomHBox> HBoxes = new ArrayList<>();
+    ArrayList<CustomHBox> hBoxes = new ArrayList<>();
 
     //Конвертер
     private ExcelConverter excelConverter;
@@ -74,10 +70,24 @@ public class MainController {
     @FXML
     private MenuItem miSearchAndCalcButton;
 
+    private int selectedTabIndex = 0;
+    //счётчик нужен, тк при иницилизации таба по умолчанию выбирается 0 таб, счетчик будет показывать, сколько раз изменялся selectedTabIndex
+    private int selectedTabIndexCounter = 0;
+
+    TotalHBox totalHBox = new TotalHBox(HBoxStyles.ZP);
+
     @FXML
     public void initialize() {
+        //Очищает hBoxes, чтобы они не дублировались!
+        hBoxes.clear();
+
+        //сбрасывает счётчик
+        selectedTabIndexCounter = 0;
+
+
         mainPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         mainPane.setStyle("-fx-border-color: grey");
+
 
         //таб с основными планами
         Tab primaryPlansTab = new Tab();
@@ -97,8 +107,23 @@ public class MainController {
         secondaryPlansTab.setContent(secondaryScrollPane);
 
 
+        //таб с ЗП
+        Tab zpTab = new Tab();
+        zpTab.setText("          ЗП          ");
+        ScrollPane zpScrollPane = new ScrollPane();
+        FlowPane zpFlowPane = new FlowPane();
+        zpScrollPane.setContent(zpFlowPane);
+        zpTab.setContent(zpScrollPane);
+
+
         //установка табов в mainPane
-        mainPane.getTabs().setAll(primaryPlansTab, secondaryPlansTab);
+        mainPane.getTabs().setAll(primaryPlansTab, secondaryPlansTab, zpTab);
+        mainPane.getSelectionModel().selectedItemProperty().addListener((observableValue, tab, t1) -> {
+            if (mainPane.getSelectionModel().getSelectedIndex() == 0 && selectedTabIndexCounter == 0) return;
+            selectedTabIndex = mainPane.getSelectionModel().getSelectedIndex();
+            selectedTabIndexCounter++;
+        });
+        mainPane.getSelectionModel().select(selectedTabIndex);
 
 
         JsonData jsonData = JsonMapper.readFromJson();
@@ -108,42 +133,81 @@ public class MainController {
 
 
         //TitleHBox с наименованиями для основных категорий
-        TitleHBox primaryTitle = new TitleHBox();
-        HBoxes.add(primaryTitle);
+        TitleHBox primaryTitle = new TitleHBox(HBoxStyles.PLAN);
+        hBoxes.add(primaryTitle);
         primaryFlowPane.getChildren().add(primaryTitle);
 
-        //установка основных категорий на пейн
+        //TitleHbox с наименованиями для дополнительных категорий
+        TitleHBox secondaryTitle = new TitleHBox(HBoxStyles.PLAN);
+        hBoxes.add(secondaryTitle);
+        secondaryFlowPane.getChildren().add(secondaryTitle);
+
+        //TitleHBox с наименованиями для ЗП
+        TitleHBox zpTitle = new TitleHBox(HBoxStyles.ZP);
+        hBoxes.add(zpTitle);
+        zpFlowPane.getChildren().add(zpTitle);
+
+        //установка основных категорий на основной и зпшный пейн
         for (PrimaryBrandCategory line : primaryBrandCategories) {
-            PrimaryBrandNameHBox primaryBrandNameHBox = new PrimaryBrandNameHBox(line);
-            HBoxes.add(primaryBrandNameHBox);
+            if (line.isHidden()) continue;
+            //Плановый бокс
+            PrimaryBrandNameHBox primaryBrandNameHBox = new PrimaryBrandNameHBox(line, HBoxStyles.PLAN);
+            hBoxes.add(primaryBrandNameHBox);
             primaryFlowPane.getChildren().add(primaryBrandNameHBox);
+
+            //зпшный бокс
+            primaryBrandNameHBox = new PrimaryBrandNameHBox(line, HBoxStyles.ZP);
+            hBoxes.add(primaryBrandNameHBox);
+            zpFlowPane.getChildren().add(primaryBrandNameHBox);
+        }
+
+        //Установка дополнительных планов на основной и зпшный пейн
+        for (SecondaryBrandCategory line : secondaryBrandCategories) {
+            if (line.isHidden()) continue;
+            //Плановый бокс
+            SecondaryBrandNameHBox secondaryBrandNameHBox = new SecondaryBrandNameHBox(line, HBoxStyles.PLAN);
+            hBoxes.add(secondaryBrandNameHBox);
+            secondaryFlowPane.getChildren().add(secondaryBrandNameHBox);
+
+            //зпшный бокс
+            //проверка на установлен ли план, если нет, то не отображает его
+            if(Objects.isNull(line.getZpProperty())) continue;
+            if(line.getZpProperty() == ZpProperty.ZERO) continue;
+            secondaryBrandNameHBox = new SecondaryBrandNameHBox(line, HBoxStyles.ZP);
+            hBoxes.add(secondaryBrandNameHBox);
+            zpFlowPane.getChildren().add(secondaryBrandNameHBox);
         }
 
         //установка условных категорий на пейн с проверкой на hidden
         for (ConditionCategory line : conditionCategories) {
             if (line.isHidden()) continue;
-            ConditionHBox conditionHBox = new ConditionHBox(line);
-            HBoxes.add(conditionHBox);
+            //Плановый бокс
+            ConditionHBox conditionHBox = new ConditionHBox(line, HBoxStyles.PLAN);
+            hBoxes.add(conditionHBox);
             primaryFlowPane.getChildren().add(conditionHBox);
+
+            //Зпшный бокс
+            conditionHBox = new ConditionHBox(line, HBoxStyles.ZP);
+            hBoxes.add(conditionHBox);
+            zpFlowPane.getChildren().add(conditionHBox);
+
+
         }
 
-
-        //TitleHbox с наименованиями для дополнительных категорий
-        TitleHBox secondaryTitle = new TitleHBox();
-        HBoxes.add(secondaryTitle);
-        secondaryFlowPane.getChildren().add(secondaryTitle);
+        //TotalHBox с общей суммой зп
+        hBoxes.add(totalHBox);
+        zpFlowPane.getChildren().add(totalHBox);
 
 
-        //Установка дополнительных планов на пейн
-        for (SecondaryBrandCategory line : secondaryBrandCategories) {
-            SecondaryBrandNameHBox secondaryBrandNameHBox = new SecondaryBrandNameHBox(line);
-            HBoxes.add(secondaryBrandNameHBox);
-            secondaryFlowPane.getChildren().add(secondaryBrandNameHBox);
-        }
+
+
+
+
+
 
         secondaryFlowPane.setVgap(5);
         primaryFlowPane.setVgap(5);
-
+        zpFlowPane.setVgap(5);
     }
 
 
@@ -175,18 +239,17 @@ public class MainController {
         Application.getMainStage().setTitle("Планы - " + file.getAbsolutePath());
 
         //Записывает время создания файла в label
-        try{
+        try {
             FileTime creationTime = (FileTime) Files.getAttribute(file.toPath(), "creationTime");
             LocalDateTime date = LocalDateTime.ofInstant(creationTime.toInstant(), TimeZone.getDefault().toZoneId());
             lblDate.setVisible(true);
             lblDate.setText(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
-        } catch (IOException exc){
+        } catch (IOException exc) {
             System.out.println("не удалось считать время открытия файла" + exc);
         }
 
         //Записывает данные файла и данные открытия в Excel файл
         jsonData.setLastOpenedFile(file);
-        jsonData.setLastOpenedDate(new Date());
         JsonMapper.writeToJson(jsonData);
 
         searchAndCalc();
@@ -213,26 +276,23 @@ public class MainController {
 
 
         //Записывает время создания файла в label
-        try{
+        try {
             FileTime creationTime = (FileTime) Files.getAttribute(file.toPath(), "creationTime");
             LocalDateTime date = LocalDateTime.ofInstant(creationTime.toInstant(), TimeZone.getDefault().toZoneId());
             lblDate.setVisible(true);
             lblDate.setText(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
-        } catch (IOException exc){
+        } catch (IOException exc) {
             System.out.println("не удалось считать время открытия файла" + exc);
         }
 
 
-
         //Записывает данные файла и данные открытия в Excel файл
         jsonData.setLastOpenedFile(file);
-        jsonData.setLastOpenedDate(new Date());
         JsonMapper.writeToJson(jsonData);
 
 
         searchAndCalc();
     }
-
 
 
     //Поиск, подсчет и вставка планов (итоговый скрипт)
@@ -243,11 +303,21 @@ public class MainController {
 
 
         //Вставка фактического выполнения
-        for (CustomHBox customHBox : HBoxes) {
+        double totalZP = 0;
+        TotalHBox totalZpBoxInstance = new TotalHBox(HBoxStyles.ZP);
+        for (CustomHBox customHBox : hBoxes) {
             if (customHBox instanceof PlanHBox) {
                 ((PlanHBox) customHBox).calculate(calculator);
+                if(customHBox.getBoxStyle() == HBoxStyles.ZP){
+                    totalZP += Double.parseDouble(((PlanHBox) customHBox).getZpPerManTextField());
+                }
+            }
+            if (customHBox instanceof TotalHBox){
+               totalZpBoxInstance = (TotalHBox) customHBox;
             }
         }
+        totalZpBoxInstance.setTotalValue(String.format(Locale.US, "%.2f", totalZP));
+
     }
 
 
@@ -259,7 +329,7 @@ public class MainController {
             Scene scene = new Scene(fxmlLoader.load());
             stage.setScene(scene);
             stage.setResizable(false);
-            stage.setAlwaysOnTop(true);
+            stage.setAlwaysOnTop(false);
             stage.setTitle("Настройки");
             Image image = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("icons/settings.png")));
             stage.getIcons().add(image);
@@ -281,7 +351,7 @@ public class MainController {
             Scene scene = new Scene(fxmlLoader.load());
             stage.setScene(scene);
             stage.setResizable(false);
-            stage.setTitle("Настройки поиска");
+            stage.setTitle("Настройки категорий");
             Image image = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("icons/settings.png")));
             stage.getIcons().add(image);
             stage.initOwner(Application.getMainStage());

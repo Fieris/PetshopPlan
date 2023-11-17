@@ -5,10 +5,11 @@ import java.util.ArrayList;
 public class PrimaryBrandCategory extends Category{
     ArrayList<String> brandNames;
 
-    public PrimaryBrandCategory(String categoryName, ArrayList<String> brandNames, double planValue){
+    public PrimaryBrandCategory(String categoryName, ArrayList<String> brandNames, double planValue, ZpProperty zpProperty){
         this.categoryName = categoryName;
         this.brandNames = brandNames;
         this.planValue = planValue;
+        this.zpProperty = zpProperty;
     }
 
     public PrimaryBrandCategory(String categoryName, ArrayList<String> brandNames){

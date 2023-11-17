@@ -7,6 +7,7 @@ import javafx.scene.input.KeyCode;
 import ru.fieris.petshopplan.Application;
 import ru.fieris.petshopplan.customControls.HBoxes.CustomHBox;
 import ru.fieris.petshopplan.customControls.HBoxes.PlanHBoxes.PlanHBox;
+import ru.fieris.petshopplan.customControls.HBoxes.TotalHBox;
 import ru.fieris.petshopplan.excel.Calculator;
 import ru.fieris.petshopplan.json.categories.PrimaryBrandCategory;
 import ru.fieris.petshopplan.json.JsonData;
@@ -49,6 +50,7 @@ public class PlanTextField extends TextField {
                 onAction(category, tooltip);
             }
         });
+
     }
 
     //Проверяет переданную строку на совместимость с double, если введено число или пустое значение
@@ -84,8 +86,8 @@ public class PlanTextField extends TextField {
         final Button ok = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
         ok.addEventFilter(ActionEvent.ACTION, event -> {
 
-
             double value = parseStringToDouble(dialog.getEditor().getText());
+
             if(value != -1){
                 this.setText(String.valueOf(value));
                 if(category instanceof PrimaryBrandCategory){
@@ -118,11 +120,13 @@ public class PlanTextField extends TextField {
                 //Если эксель конвертер существует и в нем находится валидный файл -> запускает просчет
                 if(Objects.nonNull(Application.getMainController().getExcelConverter())){
                     if(Application.getMainController().getExcelConverter().isValidFile()){
-                        PlanHBox customHBox = (PlanHBox) this.getParent();
-                        customHBox.calculate(new Calculator(Application.getMainController().getExcelConverter().getExcelArray()));
+                        //PlanHBox customHBox = (PlanHBox) this.getParent();
+                        //customHBox.calculate(new Calculator(Application.getMainController().getExcelConverter().getExcelArray()));
+                        Application.getMainController().initialize();
+                        Application.getMainController().searchAndCalc();
+
                     }
                 }
-
 
                 JsonMapper.writeToJson(jsonData);
             }

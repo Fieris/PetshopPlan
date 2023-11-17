@@ -17,6 +17,7 @@ public class Application extends javafx.application.Application {
     private static Stage mainStage = null;
     private static MainController mainController = null;
 
+
     @Override
     public void start(Stage stage) throws IOException{
         mainStage = stage;
@@ -68,6 +69,7 @@ public class Application extends javafx.application.Application {
     public static Stage getMainStage() {
         return mainStage;
     }
+
 }
 //TODO null план для импорта
 //TODO lastOpenedFileLocation для JsonData, чтобы при открытии программы она пыталась подключить последний открытый файл

@@ -6,8 +6,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 public class TitleHBox extends CustomHBox{
-    public TitleHBox(){
-        super();
+    public TitleHBox(HBoxStyles style){
+        super(style);
         Font font = Font.font("Arial", FontWeight.BOLD, 13);
 
         Label name = new Label("Наименование");
@@ -34,36 +34,55 @@ public class TitleHBox extends CustomHBox{
         percentName.setAlignment(Pos.CENTER);
         percentName.setFont(font);
 
-        Label remainsName = new Label("Осталось");
-        remainsName.setMaxWidth(100);
-        remainsName.setMinWidth(100);
-        remainsName.setAlignment(Pos.CENTER);
-        remainsName.setFont(font);
+        if(style == HBoxStyles.PLAN){
 
-        Label doPerDayName= new Label("В день");
-        doPerDayName.setMaxWidth(100);
-        doPerDayName.setMinWidth(100);
-        doPerDayName.setAlignment(Pos.CENTER);
-        doPerDayName.setFont(font);
+            Label remainsName = new Label("Осталось");
+            remainsName.setMaxWidth(100);
+            remainsName.setMinWidth(100);
+            remainsName.setAlignment(Pos.CENTER);
+            remainsName.setFont(font);
 
-        Label space = new Label("space");
-        space.setMaxWidth(25);
-        space.setMinWidth(25);
-        space.setAlignment(Pos.CENTER);
-        space.setVisible(false);
+            Label doPerDayName= new Label("В день");
+            doPerDayName.setMaxWidth(100);
+            doPerDayName.setMinWidth(100);
+            doPerDayName.setAlignment(Pos.CENTER);
+            doPerDayName.setFont(font);
 
-        Label factTodayName = new Label("Сделано");
-        factTodayName.setMinWidth(100);
-        factTodayName.setMaxWidth(100);
-        factTodayName.setAlignment(Pos.CENTER);
-        factTodayName.setFont(font);
-        
-        Label remainsTodayName = new Label("Осталось");
-        remainsTodayName.setMinWidth(100);
-        remainsTodayName.setMaxWidth(100);
-        remainsTodayName.setAlignment(Pos.CENTER);
-        remainsTodayName.setFont(font);
+            Label space = new Label("space");
+            space.setMaxWidth(25);
+            space.setMinWidth(25);
+            space.setAlignment(Pos.CENTER);
+            space.setVisible(false);
 
-        this.getChildren().addAll(name, planName,factName, percentName, remainsName, doPerDayName, space, factTodayName, remainsTodayName);
+            Label factTodayName = new Label("Сделано");
+            factTodayName.setMinWidth(100);
+            factTodayName.setMaxWidth(100);
+            factTodayName.setAlignment(Pos.CENTER);
+            factTodayName.setFont(font);
+
+            Label remainsTodayName = new Label("Осталось");
+            remainsTodayName.setMinWidth(100);
+            remainsTodayName.setMaxWidth(100);
+            remainsTodayName.setAlignment(Pos.CENTER);
+            remainsTodayName.setFont(font);
+
+            this.getChildren().addAll(name, planName,factName, percentName, remainsName, doPerDayName, space, factTodayName, remainsTodayName);
+        } else if (style == HBoxStyles.ZP) {
+            Label percentGetZp = new Label("% в ЗП");
+            percentGetZp.setMinWidth(70);
+            percentGetZp.setMaxWidth(70);
+            percentGetZp.setAlignment(Pos.CENTER);
+            percentGetZp.setFont(font);
+
+            Label zpPerMan = new Label("ЗП на человека");
+            zpPerMan.setMinWidth(100);
+            zpPerMan.setMaxWidth(100);
+            zpPerMan.setAlignment(Pos.CENTER);
+            zpPerMan.setFont(font);
+
+            this.getChildren().addAll(name, planName, factName, percentName, percentGetZp, zpPerMan);
+        }
+
+
     }
 }
