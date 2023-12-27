@@ -260,7 +260,7 @@ public abstract class PlanHBox extends CustomHBox {
             remainsTextField.setStyle("");
             doPerDayTextField.setStyle("");
             percentGetZpTextField.setStyle("");
-            zpPerManTextField.setStyle(completeStyle);
+            zpPerManTextField.setStyle("");
             factTodayTextField.setStyle(completeStyle);
             remainsTodayTextField.setStyle(completeStyle);
         } else {

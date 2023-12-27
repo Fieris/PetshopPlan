@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.fieris.petshopplan.controllers.MainController">
+<AnchorPane prefHeight="720.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.fieris.petshopplan.controllers.MainController">
    <children>
        <MenuBar layoutY="2.0">
            <Menu mnemonicParsing="false" text="Файл">
@@ -26,6 +22,7 @@
          <Menu mnemonicParsing="false" text="Дополнительно">
            <items>
              <MenuItem mnemonicParsing="false" onAction="#openGoogleTablePlans" text="Открыть таблицу планов" />
+               <MenuItem mnemonicParsing="false" onAction="#openVisualTable" text="Таблица %" />
            </items>
          </Menu>
        </MenuBar>

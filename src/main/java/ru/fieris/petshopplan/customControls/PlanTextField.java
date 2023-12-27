@@ -5,10 +5,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import ru.fieris.petshopplan.Application;
-import ru.fieris.petshopplan.customControls.HBoxes.CustomHBox;
-import ru.fieris.petshopplan.customControls.HBoxes.PlanHBoxes.PlanHBox;
-import ru.fieris.petshopplan.customControls.HBoxes.TotalHBox;
-import ru.fieris.petshopplan.excel.Calculator;
 import ru.fieris.petshopplan.json.categories.PrimaryBrandCategory;
 import ru.fieris.petshopplan.json.JsonData;
 import ru.fieris.petshopplan.json.JsonMapper;
@@ -22,8 +18,8 @@ import java.util.Date;
 import java.util.Objects;
 
 public class PlanTextField extends TextField {
-    MenuItem menuItem = new MenuItem("Изменить");
-    ContextMenu contextMenu = new ContextMenu(menuItem);
+    MenuItem changeMenuItem = new MenuItem("Изменить");
+    ContextMenu contextMenu = new ContextMenu(changeMenuItem);
     JsonData jsonData = JsonMapper.readFromJson();
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy kk:mm:ss");
 
@@ -35,14 +31,16 @@ public class PlanTextField extends TextField {
         this.setEditable(false);
 
 
+
         //tooltip
         Tooltip tooltip = new Tooltip(simpleDateFormat.format(category.getPlanChangeDate()));
         this.setTooltip(tooltip);
 
         //onAction в пкм меню
-        menuItem.setOnAction(e -> {
+        changeMenuItem.setOnAction(e -> {
             onAction(category, tooltip);
         });
+
 
         //onAction по нажатию Enter
         this.setOnKeyPressed(event -> {

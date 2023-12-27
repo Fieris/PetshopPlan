@@ -1,11 +1,11 @@
 package ru.fieris.petshopplan.json.categories;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public abstract class Category{
     protected String categoryName;
     protected double planValue;
+    protected boolean planActual;
     protected Date planChangeDate = new Date();
     protected boolean hidden = false;
     protected ZpProperty zpProperty;
@@ -49,4 +49,13 @@ public abstract class Category{
     public void setZpProperty(ZpProperty zpProperty) {
         this.zpProperty = zpProperty;
     }
+
+    public boolean isPlanActual() {
+        return planActual;
+    }
+
+    public void setPlanActual(boolean planActual) {
+        this.planActual = planActual;
+    }
+
 }

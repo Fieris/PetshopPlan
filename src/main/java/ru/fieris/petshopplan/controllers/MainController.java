@@ -5,7 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,7 +25,9 @@ import ru.fieris.petshopplan.json.categories.ZpProperty;
 import ru.fieris.petshopplan.json.categories.conditionCategory.ConditionCategory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
@@ -31,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
+import java.util.concurrent.Flow;
 
 public class MainController {
     //TODO Если это инстанс примари или кондишн, то просто копирует то же поле на третий таб, не создавая новый??
@@ -62,6 +68,7 @@ public class MainController {
     //label с текущей датой
     @FXML
     private Label lblDate;
+
 
 
     @FXML
@@ -381,5 +388,37 @@ public class MainController {
         stage.setScene(scene);
         webView.getEngine().load("https://docs.google.com/spreadsheets/d/1995oScgcL_OluFNSLkGGUjl2AGYckT3rmz9tO_FP7tw/edit?usp=sharing");
         stage.show();
+    }
+
+    @FXML
+    public void openVisualTable(){
+        Stage stage = new Stage();
+        Scene scene = new Scene(initializeVisualTable());
+
+
+        Image image = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("icons/petshop.png")));
+        stage.getIcons().add(image);
+        stage.setTitle("% выплат");
+        stage.setScene(scene);
+//        stage.setAlwaysOnTop(true);
+        stage.setResizable(false);
+        stage.initOwner(Application.getMainStage());
+        
+        
+        
+        
+        
+        stage.show();
+    }
+
+    private FlowPane initializeVisualTable(){
+        FlowPane flowPane = new FlowPane();
+
+        Image image = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("icons/Tables.png")));
+        ImageView imageView = new ImageView(image);
+
+        flowPane.getChildren().add(imageView);
+
+        return flowPane;
     }
 }
