@@ -10,6 +10,6 @@
       <Label layoutX="22.0" layoutY="24.0" text="Количество сотрудников:" />
       <Button layoutX="236.0" layoutY="20.0" mnemonicParsing="false" onAction="#saveNumberOfEmployers" text="Сохранить" />
       <TextField fx:id="emplNumberTF" layoutX="170.0" layoutY="20.0" prefHeight="25.0" prefWidth="58.0" />
-      <Label layoutX="298.0" layoutY="369.0" text="Версия: 1.2" />
+      <Label layoutX="298.0" layoutY="369.0" text="Версия: 1.4" />
    </children>
 </AnchorPane>
