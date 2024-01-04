@@ -3,8 +3,8 @@ package ru.fieris.petshopplan.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
 import ru.fieris.petshopplan.Application;
 import ru.fieris.petshopplan.json.JsonData;
 import ru.fieris.petshopplan.json.JsonMapper;
@@ -15,12 +15,16 @@ public class ProgramSettingsController {
 
     JsonData jsonData = JsonMapper.readFromJson();
 
+    @FXML private Label versionLbl;
+
     @FXML private Button saveBtn;
 
     @FXML private TextField emplNumberTF;
 
     @FXML public void initialize(){
         emplNumberTF.setText(String.valueOf(jsonData.getNumberOfEmployers()));
+        versionLbl.setText("Версия: " + Application.VERSION);
+
     }
     @FXML public void saveNumberOfEmployers(){
         int numberOfEmpl = 0;

@@ -1,14 +1,20 @@
 package ru.fieris.petshopplan.controllers;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -18,25 +24,23 @@ import ru.fieris.petshopplan.customControls.HBoxes.*;
 import ru.fieris.petshopplan.customControls.HBoxes.PlanHBoxes.*;
 import ru.fieris.petshopplan.excel.Calculator;
 import ru.fieris.petshopplan.excel.ExcelConverter;
+import ru.fieris.petshopplan.excel.ExcelSellLine;
 import ru.fieris.petshopplan.json.*;
+import ru.fieris.petshopplan.json.categories.Category;
 import ru.fieris.petshopplan.json.categories.PrimaryBrandCategory;
 import ru.fieris.petshopplan.json.categories.SecondaryBrandCategory;
 import ru.fieris.petshopplan.json.categories.ZpProperty;
 import ru.fieris.petshopplan.json.categories.conditionCategory.ConditionCategory;
+import ru.fieris.petshopplan.json.categories.conditionCategory.ConditionType;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.TimeZone;
-import java.util.concurrent.Flow;
+import java.util.*;
 
 public class MainController {
     //TODO Если это инстанс примари или кондишн, то просто копирует то же поле на третий таб, не создавая новый??
@@ -69,6 +73,10 @@ public class MainController {
     @FXML
     private Label lblDate;
 
+    /**
+     * Stage выполнение в день
+     */
+    Stage perDayCompletionStage = null;
 
 
     @FXML
@@ -76,6 +84,7 @@ public class MainController {
 
     @FXML
     private MenuItem miSearchAndCalcButton;
+    @FXML private MenuItem dopMenuPerDayButton;
 
     private int selectedTabIndex = 0;
     //счётчик нужен, тк при иницилизации таба по умолчанию выбирается 0 таб, счетчик будет показывать, сколько раз изменялся selectedTabIndex
@@ -178,8 +187,8 @@ public class MainController {
 
             //зпшный бокс
             //проверка на установлен ли план, если нет, то не отображает его
-            if(Objects.isNull(line.getZpProperty())) continue;
-            if(line.getZpProperty() == ZpProperty.ZERO) continue;
+            if (Objects.isNull(line.getZpProperty())) continue;
+            if (line.getZpProperty() == ZpProperty.ZERO) continue;
             secondaryBrandNameHBox = new SecondaryBrandNameHBox(line, HBoxStyles.ZP);
             hBoxes.add(secondaryBrandNameHBox);
             zpFlowPane.getChildren().add(secondaryBrandNameHBox);
@@ -204,12 +213,6 @@ public class MainController {
         //TotalHBox с общей суммой зп
         hBoxes.add(totalHBox);
         zpFlowPane.getChildren().add(totalHBox);
-
-
-
-
-
-
 
 
         secondaryFlowPane.setVgap(5);
@@ -243,6 +246,7 @@ public class MainController {
         }
 
         miSearchAndCalcButton.setDisable(false);
+        dopMenuPerDayButton.setDisable(false);
         Application.getMainStage().setTitle("Планы - " + file.getAbsolutePath());
 
         //Записывает время создания файла в label
@@ -279,6 +283,7 @@ public class MainController {
         this.excelConverter = excelConverter;
 
         miSearchAndCalcButton.setDisable(false);
+        dopMenuPerDayButton.setDisable(false);
         Application.getMainStage().setTitle("Планы - " + file.getAbsolutePath());
 
 
@@ -315,12 +320,12 @@ public class MainController {
         for (CustomHBox customHBox : hBoxes) {
             if (customHBox instanceof PlanHBox) {
                 ((PlanHBox) customHBox).calculate(calculator);
-                if(customHBox.getBoxStyle() == HBoxStyles.ZP){
+                if (customHBox.getBoxStyle() == HBoxStyles.ZP) {
                     totalZP += Double.parseDouble(((PlanHBox) customHBox).getZpPerManTextField());
                 }
             }
-            if (customHBox instanceof TotalHBox){
-               totalZpBoxInstance = (TotalHBox) customHBox;
+            if (customHBox instanceof TotalHBox) {
+                totalZpBoxInstance = (TotalHBox) customHBox;
             }
         }
         totalZpBoxInstance.setTotalValue(String.format(Locale.US, "%.2f", totalZP));
@@ -391,7 +396,7 @@ public class MainController {
     }
 
     @FXML
-    public void openVisualTable(){
+    public void openVisualTable() {
         Stage stage = new Stage();
         Scene scene = new Scene(initializeVisualTable());
 
@@ -403,15 +408,12 @@ public class MainController {
 //        stage.setAlwaysOnTop(true);
         stage.setResizable(false);
         stage.initOwner(Application.getMainStage());
-        
-        
-        
-        
-        
+
+
         stage.show();
     }
 
-    private FlowPane initializeVisualTable(){
+    private FlowPane initializeVisualTable() {
         FlowPane flowPane = new FlowPane();
 
         Image image = new Image(Objects.requireNonNull(Application.class.getResourceAsStream("icons/Tables.png")));
@@ -420,5 +422,123 @@ public class MainController {
         flowPane.getChildren().add(imageView);
 
         return flowPane;
+    }
+
+    @FXML
+    public void openPerDayCompletion() {
+        HBox mainHBox = new HBox();
+        mainHBox.setSpacing(20);
+        ScrollPane scrollPerDayPane = new ScrollPane(mainHBox);
+        Scene scene = new Scene(scrollPerDayPane);
+
+
+        perDayCompletionStage = new Stage();
+        perDayCompletionStage.setTitle("Выполнение по дням");
+        perDayCompletionStage.initOwner(Application.getMainStage());
+        perDayCompletionStage.setScene(scene);
+        perDayCompletionStage.setHeight(500);
+        perDayCompletionStage.setWidth(1000);
+
+        initializePerDayCompletion(mainHBox);
+
+        perDayCompletionStage.show();
+    }
+
+    private void initializePerDayCompletion(HBox hbox) {
+        ArrayList<ExcelSellLine> excelSellLineArrayList = Application.getMainController().getExcelConverter().getExcelArray();
+        //хэшсет со всеми датами, которые есть в эксель документе
+        HashSet<LocalDate> datesOfSale = new HashSet<>();
+
+        //лист с нужными категориями
+        ArrayList<Category> categories = new ArrayList<>();
+        categories.addAll(JsonMapper.readFromJson().getPrimaryBrandCategories());
+        categories.addAll(JsonMapper.readFromJson().getConditionCategories());
+
+        Font titleFont = Font.font("Arial", FontWeight.BOLD, 14);
+        Font font = Font.font("Arial", 14);
+
+        //Инициализация хэшсета с датами и перенос его в лист
+        for (ExcelSellLine line :
+                excelSellLineArrayList) {
+            datesOfSale.add(line.getDateOfSale());
+        }
+        List<LocalDate> listOfDatesOfSale = new ArrayList<>(datesOfSale);
+        Collections.sort(listOfDatesOfSale);
+
+        //VBox с наименованиями
+        VBox titleVBox = new VBox();
+        titleVBox.setSpacing(5);
+        titleVBox.setAlignment(Pos.CENTER);
+        Label titleLbl = new Label("Дата:");
+        titleLbl.setMinHeight(25);
+        titleLbl.setMaxHeight(25);
+        titleLbl.setFont(titleFont);
+        titleVBox.getChildren().add(titleLbl);
+        for (Category category : categories) {
+            Label categoryLbl = new Label(category.getCategoryName() + ":");
+            categoryLbl.setMaxHeight(25);
+            categoryLbl.setMinHeight(25);
+            categoryLbl.setFont(titleFont);
+            titleVBox.getChildren().add(categoryLbl);
+        }
+        hbox.getChildren().add(titleVBox);
+
+
+        //для каждой даты свой VBox с данными
+        for (LocalDate date :
+                listOfDatesOfSale) {
+            VBox vBox = new VBox();
+            vBox.setAlignment(Pos.CENTER);
+            vBox.setSpacing(5);
+            Label label = new Label(date.toString());
+            label.setMinHeight(25);
+            label.setMaxHeight(25);
+            label.setFont(titleFont);
+            vBox.getChildren().add(label);
+
+            for (Category category : categories) {
+                double value = 0;
+                TextField textField = new TextField();
+                if (category instanceof PrimaryBrandCategory) {
+                    ArrayList<String> brandNames = ((PrimaryBrandCategory) category).getBrandNames();
+                    for (String brandName : brandNames) {
+                        for (ExcelSellLine line : excelSellLineArrayList) {
+                            if (line.getManufacturer().equals(brandName) && line.getDateOfSale().equals(date)) {
+                                value += line.getTotalPriceExcludingBonuses() + line.getSpentPetshopBonuses() + line.getSpentSpasiboBonuses();
+                            }
+                        }
+                    }
+                } else if (category instanceof ConditionCategory) {
+                    for(ExcelSellLine line : excelSellLineArrayList){
+                        if (((ConditionCategory) category).getConditionType().equals(ConditionType.VIA)){
+                            if((line.getName().toUpperCase().startsWith("ВИА") || line.getName().toUpperCase().startsWith("ВВА")) && line.getDateOfSale().equals(date)){
+                                value += line.getTotalPriceExcludingBonuses() + line.getSpentPetshopBonuses() + line.getSpentSpasiboBonuses();
+                            }
+                        } else if (((ConditionCategory) category).getConditionType().equals(ConditionType.VES)) {
+                            if((line.getArticle().endsWith("099") && line.getArticle().length() > 5) && line.getDateOfSale().equals(date)){
+                                value += line.getTotalPriceExcludingBonuses() + line.getSpentPetshopBonuses() + line.getSpentSpasiboBonuses();
+                            }
+                        } else if (((ConditionCategory) category).getConditionType().equals(ConditionType.ALL)) {
+                            if(line.getDateOfSale().equals(date)){
+                                value += line.getTotalPriceExcludingBonuses() + line.getSpentPetshopBonuses() + line.getSpentSpasiboBonuses();
+                            }
+                        }
+                    }
+                }
+                textField.setText(String.format(Locale.US, "%.2f", value));
+                textField.setEditable(false);
+                textField.setAlignment(Pos.CENTER);
+                textField.setFont(font);
+                textField.setMinHeight(25);
+                textField.setMaxHeight(25);
+                textField.setMinWidth(100);
+                textField.setMaxWidth(100);
+                textField.setFocusTraversable(false);
+                vBox.getChildren().add(textField);
+            }
+
+
+            hbox.getChildren().add(vBox);
+        }
     }
 }

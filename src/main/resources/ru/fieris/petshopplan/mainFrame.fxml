@@ -21,6 +21,7 @@
          </Menu>
          <Menu mnemonicParsing="false" text="Дополнительно">
            <items>
+               <MenuItem fx:id="dopMenuPerDayButton" disable="true" mnemonicParsing="false" onAction="#openPerDayCompletion" text="Выполнение по дням" />
              <MenuItem mnemonicParsing="false" onAction="#openGoogleTablePlans" text="Открыть таблицу планов" />
                <MenuItem mnemonicParsing="false" onAction="#openVisualTable" text="Таблица %" />
            </items>
