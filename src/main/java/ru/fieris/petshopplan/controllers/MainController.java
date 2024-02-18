@@ -1,22 +1,22 @@
 package ru.fieris.petshopplan.controllers;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ru.fieris.petshopplan.Application;
 import ru.fieris.petshopplan.actionevents.MenuItemExcelOpenAction;
@@ -80,7 +80,7 @@ public class MainController {
 
 
     @FXML
-    private ScrollPane scrollPane;
+    private ScrollPane scrollPerDayPane;
 
     @FXML
     private MenuItem miSearchAndCalcButton;
@@ -426,25 +426,44 @@ public class MainController {
 
     @FXML
     public void openPerDayCompletion() {
-        HBox mainHBox = new HBox();
-        mainHBox.setSpacing(20);
-        ScrollPane scrollPerDayPane = new ScrollPane(mainHBox);
-        Scene scene = new Scene(scrollPerDayPane);
+        StackPane rootPane = new StackPane();
+        rootPane.setAlignment(Pos.TOP_LEFT);
+
+        VBox categoriesVBox = new VBox();
+        categoriesVBox.setMaxWidth(120);
+        categoriesVBox.setMinWidth(120);
+
+        HBox planHBox = new HBox();
+        planHBox.setSpacing(20);
+        ScrollPane scrollPerDayPane = new ScrollPane(planHBox);
+
+
+        Label space = new Label();
+        space.setMinWidth(120);
+        space.setMaxWidth(120);
+        planHBox.getChildren().add(0,space);
+
+
+        rootPane.getChildren().add(0,scrollPerDayPane);
+        rootPane.getChildren().add(1,categoriesVBox);
+
+        Scene scene = new Scene(rootPane);
 
 
         perDayCompletionStage = new Stage();
         perDayCompletionStage.setTitle("Выполнение по дням");
         perDayCompletionStage.initOwner(Application.getMainStage());
         perDayCompletionStage.setScene(scene);
-        perDayCompletionStage.setHeight(500);
-        perDayCompletionStage.setWidth(1000);
 
-        initializePerDayCompletion(mainHBox);
+        perDayCompletionStage.setResizable(false);
+
+
+        initializePerDayCompletion(categoriesVBox,planHBox);
 
         perDayCompletionStage.show();
     }
 
-    private void initializePerDayCompletion(HBox hbox) {
+    private void initializePerDayCompletion(VBox ctgs, HBox plans) {
         ArrayList<ExcelSellLine> excelSellLineArrayList = Application.getMainController().getExcelConverter().getExcelArray();
         //хэшсет со всеми датами, которые есть в эксель документе
         HashSet<LocalDate> datesOfSale = new HashSet<>();
@@ -466,22 +485,27 @@ public class MainController {
         Collections.sort(listOfDatesOfSale);
 
         //VBox с наименованиями
-        VBox titleVBox = new VBox();
-        titleVBox.setSpacing(5);
-        titleVBox.setAlignment(Pos.CENTER);
-        Label titleLbl = new Label("Дата:");
-        titleLbl.setMinHeight(25);
-        titleLbl.setMaxHeight(25);
-        titleLbl.setFont(titleFont);
-        titleVBox.getChildren().add(titleLbl);
+        ctgs.setSpacing(5);
+        ctgs.setAlignment(Pos.TOP_LEFT);
+//        Label titleLbl = new Label("Дата:");
+        Button titleBtn = new Button("Дата:");
+        titleBtn.setFocusTraversable(false);
+        titleBtn.setMinHeight(25);
+        titleBtn.setMaxHeight(25);
+        titleBtn.setMinWidth(120);
+        titleBtn.setMaxWidth(120);
+        titleBtn.setFont(titleFont);
+        ctgs.getChildren().add(titleBtn);
         for (Category category : categories) {
-            Label categoryLbl = new Label(category.getCategoryName() + ":");
-            categoryLbl.setMaxHeight(25);
-            categoryLbl.setMinHeight(25);
-            categoryLbl.setFont(titleFont);
-            titleVBox.getChildren().add(categoryLbl);
+            Button categoryBtn = new Button(category.getCategoryName() + ":");
+            categoryBtn.setFocusTraversable(false);
+            categoryBtn.setMinWidth(120);
+            categoryBtn.setMaxWidth(120);
+            categoryBtn.setMaxHeight(25);
+            categoryBtn.setMinHeight(25);
+            categoryBtn.setFont(titleFont);
+            ctgs.getChildren().add(categoryBtn);
         }
-        hbox.getChildren().add(titleVBox);
 
 
         //для каждой даты свой VBox с данными
@@ -538,7 +562,7 @@ public class MainController {
             }
 
 
-            hbox.getChildren().add(vBox);
+            plans.getChildren().add(vBox);
         }
     }
 }
