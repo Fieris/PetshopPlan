@@ -104,6 +104,7 @@ public class JsonMapper {
         brandCategories.add(new PrimaryBrandCategory("VIDA", new ArrayList<>(List.of(new String[]{"VIDA Super", "VIDA Nativa"})), 0,ZpProperty.STD_2_4_6));
 
         brandCategories.add(new PrimaryBrandCategory("Purina", new ArrayList<>(List.of(new String[]{"Purina (вет. корма паучи)", "Purina (вет. корма)", "Purina Pro Plan", "Purina Pro Plan (паучи)"})), 0, ZpProperty.PURINA));
+        brandCategories.add(new PrimaryBrandCategory("Purina доп", new ArrayList<>(List.of(new String[]{"Purina (вет. корма паучи)", "Purina (вет. корма)", "Purina Pro Plan", "Purina Pro Plan (паучи)"})), 0, ZpProperty.PURINAMOTIV));
 
         brandCategories.add(new PrimaryBrandCategory("RC вет", new ArrayList<>(List.of(new String[]{"Royal Canin (вет.корма)", "Royal Canin (вет. паучи)"})), 0,ZpProperty.RC));
         brandCategories.add(new PrimaryBrandCategory("RC весь", new ArrayList<>(List.of(new String[]{"Royal Canin", "Royal Canin (вет. паучи)", "Royal Canin (вет.корма)", "Royal Canin паучи"})), 0, ZpProperty.RC));

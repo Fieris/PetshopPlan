@@ -52,7 +52,7 @@ public class Calculator {
             for(ExcelSellLine line : arrayList){
                 switch(((ConditionCategory) category).getConditionType()){
                     case VIA:
-                        if(line.getName().toUpperCase().startsWith("ВИА") || line.getName().toUpperCase().startsWith("ВВА")){
+                        if(line.getName().toUpperCase().contains("ВИА") || line.getName().toUpperCase().contains("ВВА")){
                             result += line.getTotalPriceExcludingBonuses() + line.getSpentSpasiboBonuses() + line.getSpentPetshopBonuses();
                         }
                         break;
@@ -106,7 +106,7 @@ public class Calculator {
                 if(line.getDateOfSale().equals(date)){
                     switch (((ConditionCategory) category).getConditionType()){
                         case VIA:
-                            if(line.getName().toUpperCase().startsWith("ВИА") || line.getName().toUpperCase().startsWith("ВВА")){
+                            if(line.getName().toUpperCase().contains("ВИА") || line.getName().toUpperCase().contains("ВВА")){
                                 result += line.getTotalPriceExcludingBonuses() + line.getSpentSpasiboBonuses() + line.getSpentPetshopBonuses();
                             }
                             break;
@@ -167,10 +167,6 @@ public class Calculator {
                     result = 2;
                 }
                 break;
-            case RC:
-            case ALLTO:
-                result = 0;
-                break;
             case HILLS:
                 if(donePercent >= 100){
                     result = 4;
@@ -222,9 +218,13 @@ public class Calculator {
                     result = 0;
                 }
                 break;
+            case RC:
+            case ALLTO:
+            case PURINAMOTIV:
             case ZERO:
                 result = 0;
                 break;
+
         }
 
         return result;
@@ -237,6 +237,18 @@ public class Calculator {
                 return 2000;
             } else {
                 return 0;
+            }
+        }
+
+        //* При выполнении доп мотивации платят 6к на магазин
+        if(zpProperty == ZpProperty.PURINAMOTIV){
+            if(donePercent >= 100){
+                try{
+                    result = 6000.00 / jsonData.getNumberOfEmployers();
+                } catch (Exception exc){
+                    System.out.println(exc);
+                }
+                return result;
             }
         }
         
