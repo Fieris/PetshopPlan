@@ -454,6 +454,7 @@ public class MainController {
         perDayCompletionStage.setTitle("Выполнение по дням");
         perDayCompletionStage.initOwner(Application.getMainStage());
         perDayCompletionStage.setScene(scene);
+        perDayCompletionStage.setMaximized(true);
 
         perDayCompletionStage.setResizable(false);
 
