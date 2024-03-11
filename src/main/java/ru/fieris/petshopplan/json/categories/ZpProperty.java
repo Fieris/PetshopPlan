@@ -7,6 +7,7 @@ public enum ZpProperty {
     STD_2_3_5("2/3/5%", ">100% = 5%\n>85% <99% = 3%\n<85% = 2%"),
     STD_2_3_6("2/3/6%",">100% = 6%\n>85% <99% = 3%\n<85% = 2%"),
     STD_2_4_6("2/4/6%", ">100% = 6%\n>85% <99% = 4%\n<85% = 2%"),
+    STD_3_5_7("3/5/7%", ">100% = 7%\n>85% <99% =3%\n<85% = 3%"),
     RC("RC", ">100% = 2000р\n<100% = 0р"),
     PURINA("Purina", ">100% = 3%\n>95% <99,99% = 2%\n>90% <94,99% = 1%\n<90% = 0"),
     PURINAMOTIV("Purina доп. мотивация", ">100% = 6000р на магазин"),
@@ -39,6 +40,7 @@ public enum ZpProperty {
         result.add(STD_2_3_5);
         result.add(STD_2_3_6);
         result.add(STD_2_4_6);
+        result.add(STD_3_5_7);
         result.add(RC);
         result.add(PURINA);
         result.add(PURINAMOTIV);

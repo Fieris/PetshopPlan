@@ -86,22 +86,24 @@ public class JsonMapper {
                 "Smart Cat сухой корм", "Smart Cat лакомства", "Smart Cat паучи",
                 "Smart Dog консервы", "Smart Dog лакомства", "Smart Dog паучи", "Smart Dog сухой корм",
                 "Organix (профилактика)", "Organix консервы", "Organix консервы (профилактика)",
-                "Organix лакомства", "Organix паучи", "Organix сухой корм"
-        )), 0, ZpProperty.STD_2_4_6));
+                "Organix лакомства", "Organix паучи", "Organix сухой корм",
+                "GO!"
+        )), 0, ZpProperty.STD_3_5_7));
 
         brandCategories.add(new PrimaryBrandCategory("Импорт", new ArrayList<>(List.of(
-                "Almo Nature", "Almo Nature Alternative", "Almo Nature консервы",
-                "GO!","Go! Консервы", "NOW FRESH",
+                "Almo Nature", "Almo Nature Alternative", "Almo Nature консервы","Go! Консервы", "NOW FRESH",
                 "Barking Heads", "Barking Heads Консервы", "Meowing Heads", "Meowing Heads консервы",
                 "Canada Litter", "Eurolitter", "Ro Cat",
                 "Pronature Life"
         )), 0, ZpProperty.STD_2_3_5));
 
-        brandCategories.add(new PrimaryBrandCategory("Bonsy", new ArrayList<>(List.of(new String[]{"Bonsy"})), 0,ZpProperty.ALWAYS5));
+
 
         brandCategories.add(new PrimaryBrandCategory("ULTRA", new ArrayList<>(List.of(new String[]{"ULTRA", "ULTRA паучи"})), 0,ZpProperty.STD_2_4_6));
 
         brandCategories.add(new PrimaryBrandCategory("VIDA", new ArrayList<>(List.of(new String[]{"VIDA Super", "VIDA Nativa"})), 0,ZpProperty.STD_2_4_6));
+
+        brandCategories.add(new PrimaryBrandCategory("Avance", new ArrayList<>(List.of(new String[]{"AVANCE"})), 0,ZpProperty.STD_2_4_6));
 
         brandCategories.add(new PrimaryBrandCategory("Purina", new ArrayList<>(List.of(new String[]{"Purina (вет. корма паучи)", "Purina (вет. корма)", "Purina Pro Plan", "Purina Pro Plan (паучи)"})), 0, ZpProperty.PURINA));
         brandCategories.add(new PrimaryBrandCategory("Purina доп", new ArrayList<>(List.of(new String[]{"Purina (вет. корма паучи)", "Purina (вет. корма)", "Purina Pro Plan", "Purina Pro Plan (паучи)"})), 0, ZpProperty.PURINAMOTIV));
@@ -114,13 +116,15 @@ public class JsonMapper {
         brandCategories.add(new PrimaryBrandCategory("Hill's вет конс.", new ArrayList<>(List.of(new String[]{"Hill's вет.консервы"})), 0, ZpProperty.HILLS));
         brandCategories.add(new PrimaryBrandCategory("Hill's консервы", new ArrayList<>(List.of(new String[]{"Hill's консервы"})), 0,ZpProperty.HILLS));
 
+        brandCategories.add(new PrimaryBrandCategory("Bonsy", new ArrayList<>(List.of(new String[]{"Bonsy"})), 0,ZpProperty.ALWAYS5));
+
 
         //иницилизация остальных 2%
         ArrayList<String> wholeImport = new ArrayList<>(List.of("AATU", "AATU Консервы", "All Cats", "All Dogs", "Applaws", "Applaws консервы","Classic (Versele-Laga)",
                 "Frank's ProGold", "Frank's ProGold консервы", "GATHER", "Happy Life (Versele-Laga)", "NERO GOLD super premium", "Nero Gold консервы", "Ontario",
                 "Ontario (консервы, лакомства)", "Summit", "Italian Way", "Italian Way Консервы", "Petsmack лакомства", "Kito", "Tauro", "Havlife",
                 "Kittylife", "Paw love", "Pati luna", "Almo Nature Cat Litter", "Easy Clean (Канада)", "NAPKINS наполнитель", "Sani Cat", "SEPICAT", "Smart Cat наполнитель",
-                "Van Cat", "White Sand", "Organix наполнители", "Freya", "2u", "Anju Beaute", "NAPKINS гигиенические пакеты", "NAPKINS пеленки", "Pet Head",
+                "Van Cat", "White Sand", "Organix наполнители", "Freya", "Toi-Moi", "2u", "Anju Beaute", "NAPKINS гигиенические пакеты", "NAPKINS пеленки", "Pet Head",
                 "Petsmack", "Smart Dog пелёнки", "Misoko & Co", "PetshopRu гигиена", "Cortina", "DogSnap", "EduPet", "Ferribiella аксессуары", "Ferribiella одежда",
                 "Kitty City", "Kong", "Kong рулетки", "LeLap амуниция", "Lelap когтеточки и лежаки", "Lelap одежда", "Lelap транспортировка", "Lion",
                 "Lion лежанки", "Mighty", "Nylabone", "Papillon", "PetshopRu игрушки", "PetshopRu когтеточки", "PetshopRu миски", "Pinkaholic",

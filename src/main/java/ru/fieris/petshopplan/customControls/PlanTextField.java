@@ -54,19 +54,23 @@ public class PlanTextField extends TextField {
     //Проверяет переданную строку на совместимость с double, если введено число или пустое значение
     //возвращает -1
     private double parseStringToDouble(String string) {
+        //создание алерта
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка");
         alert.setHeaderText("");
+
         double result;
+        //убирание пробелов слева и справа
         string = string.trim();
+        if(string.contains(",")) string = string.replace(",", ".");
         try{
             result = Double.parseDouble(string);
         } catch (NullPointerException exc){
             alert.setContentText(exc.toString());
             alert.show();
             return -1;
-        } catch (NumberFormatException exc){
-            alert.setContentText("Вводите только числа и точки " + exc);
+        } catch (NumberFormatException exc) {
+            alert.setContentText(exc.getLocalizedMessage());
             alert.show();
             return -1;
         }

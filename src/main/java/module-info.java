@@ -4,6 +4,7 @@ module ru.fieris.petshopplan {
     requires org.apache.poi.ooxml;
     requires com.fasterxml.jackson.databind;
     requires javafx.web;
+    requires com.dustinredmond.fxtrayicon;
 
 
     opens ru.fieris.petshopplan to javafx.fxml;

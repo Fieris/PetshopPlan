@@ -207,6 +207,15 @@ public class Calculator {
                     result = 2;
                 }
                 break;
+            case STD_3_5_7:
+                if(donePercent >= 100){
+                    result = 7;
+                } else if (donePercent >= 85 && donePercent < 99) {
+                    result = 5;
+                } else {
+                    result = 3;
+                }
+                break;
             case PURINA:
                 if(donePercent >= 100){
                     result = 3;

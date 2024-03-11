@@ -71,6 +71,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.dustinredmond.fxtrayicon</groupId>
+            <artifactId>FXTrayIcon</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+
 
     </dependencies>
 
