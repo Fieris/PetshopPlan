@@ -16,6 +16,7 @@ public enum ZpProperty {
     ALWAYS5("5%", "5%"),
     ALWAYS2("2%", "2%"),
     ALLTO("Весь ТО", ">=104% = 6750р\n100-103.99% = 5500р\n95-99.99% = 3500р\n90-94.99% = 2500р\n85-89.99% = 1000р\n<84.99 = 0р"),
+    DOLYANB("Доля НБ", ">=100% = 2500р\n<100% = 0р"),
     ZERO("0%", "Если за план нет %");
 
     final String name;
@@ -48,6 +49,7 @@ public enum ZpProperty {
         result.add(VIA);
         result.add(ALWAYS5);
         result.add(ALWAYS2);
+        result.add(DOLYANB);
         result.add(ALLTO);
         result.add(ZERO);
         return result;

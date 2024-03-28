@@ -231,6 +231,7 @@ public class Calculator {
             case ALLTO:
             case PURINAMOTIV:
             case ZERO:
+            case DOLYANB:
                 result = 0;
                 break;
 
@@ -275,6 +276,13 @@ public class Calculator {
             } else {
                 return 0;
             }
+        }
+
+        if(zpProperty == ZpProperty.DOLYANB){
+            if(donePercent >= 100)
+                return 2500;
+            else
+                return 0;
         }
 
         try{
