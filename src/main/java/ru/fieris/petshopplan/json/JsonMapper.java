@@ -88,7 +88,7 @@ public class JsonMapper {
                 "Organix (профилактика)", "Organix консервы", "Organix консервы (профилактика)",
                 "Organix лакомства", "Organix паучи", "Organix сухой корм",
                 "GO!"
-        )), 0, ZpProperty.STD_3_5_7));
+        )), 0, ZpProperty.STD_3_5_8));
 
         brandCategories.add(new PrimaryBrandCategory("Доля НБ", new ArrayList<>(List.of(
                 "2u","Avance", "Bonsy","FLORIDA","FLORIDA (профилактика)","FLORIDA консервы",
