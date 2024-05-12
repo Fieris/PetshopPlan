@@ -17,7 +17,7 @@ import java.util.EventObject;
 import java.util.Objects;
 
 public class Application extends javafx.application.Application {
-    public static final String VERSION = "1.11";
+    public static final String VERSION = "1.12";
     private static Stage mainStage = null;
     private static MainController mainController = null;
     private FXTrayIcon trayIcon = null;

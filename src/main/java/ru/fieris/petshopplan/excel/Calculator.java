@@ -277,7 +277,7 @@ public class Calculator {
             } else if (donePercent >= 100 && donePercent <= 103.99) {
                 return 5500;
             } else if (donePercent >= 95 && donePercent <= 99.99) {
-                return 3500;
+                return 4000;
             } else if (donePercent >= 90 && donePercent <= 94.99) {
                 return 2500;
             } else if (donePercent >= 85 && donePercent <= 89.99) {
