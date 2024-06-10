@@ -4,7 +4,7 @@
   <groupId>ru.Fieris</groupId>
   <artifactId>PetshopPlan</artifactId>
   <name>PetshopPlan</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.13</version>
   <build>
     <plugins>
       <plugin>

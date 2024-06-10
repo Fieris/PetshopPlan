@@ -87,19 +87,19 @@ public class JsonMapper {
                 "Smart Dog консервы", "Smart Dog лакомства", "Smart Dog паучи", "Smart Dog сухой корм",
                 "Organix (профилактика)", "Organix консервы", "Organix консервы (профилактика)",
                 "Organix лакомства", "Organix паучи", "Organix сухой корм",
-                "GO!"
+                "GO'KITCHEN", "AVANCE holistic"
         )), 0, ZpProperty.STD_3_5_8));
 
         brandCategories.add(new PrimaryBrandCategory("Доля НБ", new ArrayList<>(List.of(
-                "2u","Avance", "Bonsy","FLORIDA","FLORIDA (профилактика)","FLORIDA консервы",
-                "FLORIDA консервы (профилактика)","FLORIDA лакомства","FLORIDA паучи","Frank's ProGold консервы",
-                "LeLap амуниция", "Lelap игрушки", "Lelap когтеточки","Lelap когтеточки и лежаки",
-                "Lelap лежаки", "Lelap одежда","LeLap рулетки", "Lelap транспортировка","MR.Crisper",
-                "NAPKINS гигиенические пакеты","NAPKINS наполнитель","NAPKINS пеленки","NERO GOLD super premium",
-                "Nero Gold консервы","Organix (профилактика)","Organix консервы","Organix консервы (профилактика)",
-                "Organix лакомства","Organix наполнители","Organix паучи","Organix сухой корм","Petshop Box",
-                "PETSHOP игрушки","PETSHOP когтеточки","PETSHOP лежаки","PETSHOP транспортировка","PetshopRu гигиена",
-                "PetshopRu игрушки","PetshopRu когтеточки и лежаки","PetshopRu лежаки","PetshopRu МЕРЧ",
+                "2u", "AVANCE holistic", "Bonsy", "FLORIDA", "FLORIDA (профилактика)", "FLORIDA консервы",
+                "FLORIDA консервы (профилактика)", "FLORIDA лакомства", "FLORIDA паучи", "Frank's ProGold консервы", "GO'KITCHEN",
+                "LeLap амуниция", "Lelap игрушки", "Lelap когтеточки", "Lelap когтеточки и лежаки",
+                "Lelap лежаки", "Lelap одежда", "LeLap рулетки", "Lelap транспортировка", "MR.Crisper",
+                "NAPKINS гигиенические пакеты", "NAPKINS наполнитель", "NAPKINS пеленки", "NERO GOLD super premium",
+                "Nero Gold консервы", "Organix (профилактика)", "Organix консервы", "Organix консервы (профилактика)",
+                "Organix лакомства", "Organix наполнители", "Organix паучи", "Organix сухой корм", "Petshop Box",
+                "PETSHOP игрушки", "PETSHOP когтеточки", "PETSHOP лежаки", "PETSHOP транспортировка", "PetshopRu гигиена",
+                "PetshopRu игрушки", "PetshopRu когтеточки и лежаки", "PetshopRu лежаки", "PetshopRu МЕРЧ",
                 "PetshopRu миски", "Petsmack", "Petsmack лакомства", "Pronature Life", "SAVITA консервы",
                 "SAVITA сухой корм", "Smart Cat лакомства", "Smart Cat наполнитель", "Smart Cat паучи",
                 "Smart Cat сухой корм", "Smart Dog консервы", "Smart Dog лакомства", "Smart Dog паучи",
@@ -114,8 +114,8 @@ public class JsonMapper {
         brandCategories.add(new PrimaryBrandCategory("Импорт", new ArrayList<>(List.of(
                 "Almo Nature", "Almo Nature Alternative", "Almo Nature консервы", "Go! Консервы", "NOW FRESH",
                 "Barking Heads", "Barking Heads Консервы", "Meowing Heads", "Meowing Heads консервы",
-                "Canada Litter", "Eurolitter", "Ro Cat",
-                "Pronature Life"
+                "Canada Litter", "Eurolitter", "Ro Cat", "Van Cat",
+                "Pronature Life", "Inaba"
         )), 0, ZpProperty.STD_2_3_5));
 
 
@@ -123,18 +123,22 @@ public class JsonMapper {
 
         brandCategories.add(new PrimaryBrandCategory("VIDA", new ArrayList<>(List.of(new String[]{"VIDA Super", "VIDA Nativa"})), 0, ZpProperty.STD_2_4_6));
 
-        brandCategories.add(new PrimaryBrandCategory("Avance", new ArrayList<>(List.of(new String[]{"AVANCE holistic"})), 0, ZpProperty.STD_2_4_6));
+        //Перенесен с 06.2024 в СТМ
+        //brandCategories.add(new PrimaryBrandCategory("Avance", new ArrayList<>(List.of(new String[]{"AVANCE holistic"})), 0, ZpProperty.STD_2_4_6));
 
-        brandCategories.add(new PrimaryBrandCategory("Purina", new ArrayList<>(List.of(new String[]{"Purina (вет. корма паучи)", "Purina (вет. корма)", "Purina Pro Plan", "Purina Pro Plan (паучи)"})), 0, ZpProperty.PURINA));
-        brandCategories.add(new PrimaryBrandCategory("Purina доп", new ArrayList<>(List.of(new String[]{"Purina (вет. корма паучи)", "Purina (вет. корма)", "Purina Pro Plan", "Purina Pro Plan (паучи)"})), 0, ZpProperty.PURINAMOTIV));
+        //план считается только через определенные арты теперь
+//        brandCategories.add(new PrimaryBrandCategory("Purina", new ArrayList<>(List.of(new String[]{"Purina (вет. корма паучи)", "Purina (вет. корма)", "Purina Pro Plan", "Purina Pro Plan (паучи)"})), 0, ZpProperty.PURINA));
+//        brandCategories.add(new PrimaryBrandCategory("Purina доп", new ArrayList<>(List.of(new String[]{"Purina (вет. корма паучи)", "Purina (вет. корма)", "Purina Pro Plan", "Purina Pro Plan (паучи)"})), 0, ZpProperty.PURINAMOTIV));
 
-        brandCategories.add(new PrimaryBrandCategory("RC вет", new ArrayList<>(List.of(new String[]{"Royal Canin (вет.корма)", "Royal Canin (вет. паучи)"})), 0, ZpProperty.RC));
+        //Плана больше нет
+//        brandCategories.add(new PrimaryBrandCategory("RC вет", new ArrayList<>(List.of(new String[]{"Royal Canin (вет.корма)", "Royal Canin (вет. паучи)"})), 0, ZpProperty.RC));
         brandCategories.add(new PrimaryBrandCategory("RC весь", new ArrayList<>(List.of(new String[]{"Royal Canin", "Royal Canin (вет. паучи)", "Royal Canin (вет.корма)", "Royal Canin паучи"})), 0, ZpProperty.RC));
 
-        brandCategories.add(new PrimaryBrandCategory("Hill's PD", new ArrayList<>(List.of(new String[]{"Hill's Prescription Diet"})), 0, ZpProperty.HILLS));
-        brandCategories.add(new PrimaryBrandCategory("Hill's SP", new ArrayList<>(List.of(new String[]{"Hill's Science Plan"})), 0, ZpProperty.HILLS));
-        brandCategories.add(new PrimaryBrandCategory("Hill's вет конс.", new ArrayList<>(List.of(new String[]{"Hill's вет.консервы"})), 0, ZpProperty.HILLS));
-        brandCategories.add(new PrimaryBrandCategory("Hill's консервы", new ArrayList<>(List.of(new String[]{"Hill's консервы"})), 0, ZpProperty.HILLS));
+        //Плана больше нет
+//        brandCategories.add(new PrimaryBrandCategory("Hill's PD", new ArrayList<>(List.of(new String[]{"Hill's Prescription Diet"})), 0, ZpProperty.HILLS));
+//        brandCategories.add(new PrimaryBrandCategory("Hill's SP", new ArrayList<>(List.of(new String[]{"Hill's Science Plan"})), 0, ZpProperty.HILLS));
+//        brandCategories.add(new PrimaryBrandCategory("Hill's вет конс.", new ArrayList<>(List.of(new String[]{"Hill's вет.консервы"})), 0, ZpProperty.HILLS));
+//        brandCategories.add(new PrimaryBrandCategory("Hill's консервы", new ArrayList<>(List.of(new String[]{"Hill's консервы"})), 0, ZpProperty.HILLS));
 
         brandCategories.add(new PrimaryBrandCategory("Bonsy", new ArrayList<>(List.of(new String[]{"Bonsy"})), 0, ZpProperty.ALWAYS5));
 
@@ -142,7 +146,7 @@ public class JsonMapper {
         ArrayList<String> wholeImport = new ArrayList<>(List.of("AATU", "AATU Консервы", "All Cats", "All Dogs", "Applaws", "Applaws консервы", "Classic (Versele-Laga)",
                 "Frank's ProGold", "Frank's ProGold консервы", "GATHER", "Happy Life (Versele-Laga)", "NERO GOLD super premium", "Nero Gold консервы", "Ontario",
                 "Ontario (консервы, лакомства)", "Summit", "Italian Way", "Italian Way Консервы", "Petsmack лакомства", "Kito", "Tauro", "Havlife",
-                "Kittylife", "Paw love", "Pati luna", "Almo Nature Cat Litter", "Easy Clean (Канада)", "NAPKINS наполнитель", "Sani Cat", "SEPICAT", "Smart Cat наполнитель",
+                "Kittylife", "Paw love", "Pati luna", "Pet's Choice", "Wild Atlantic", "Almo Nature Cat Litter", "Easy Clean (Канада)", "NAPKINS наполнитель", "Sani Cat", "SEPICAT", "Smart Cat наполнитель",
                 "Van Cat", "White Sand", "Organix наполнители", "Freya", "Toi-Moi", "2u", "Anju Beaute", "NAPKINS гигиенические пакеты", "NAPKINS пеленки", "Pet Head",
                 "Petsmack", "Smart Dog пелёнки", "Misoko & Co", "PetshopRu гигиена", "Cortina", "DogSnap", "EduPet", "Ferribiella аксессуары", "Ferribiella одежда",
                 "Kitty City", "Kong", "Kong рулетки", "LeLap амуниция", "Lelap когтеточки и лежаки", "Lelap одежда", "Lelap транспортировка", "Lion",

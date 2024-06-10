@@ -6,7 +6,7 @@
 
     <groupId>ru.Fieris</groupId>
     <artifactId>PetshopPlan</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.13</version>
     <name>PetshopPlan</name>
 
     <properties>
