@@ -1,5 +1,6 @@
 package ru.fieris.petshopplan.controllers;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -91,6 +92,9 @@ public class MainController {
     private int selectedTabIndexCounter = 0;
 
     TotalHBox totalHBox = new TotalHBox(HBoxStyles.ZP);
+
+    //Лист с артикулами для поиска
+    private ListView<String> articulInfoListView;
 
     @FXML
     public void initialize() {
@@ -210,6 +214,10 @@ public class MainController {
 
         }
 
+        //Таб для отслеживания продажи артов
+        Tab articulSearcherTab = articulSearcherInitialize();
+        mainPane.getTabs().add(articulSearcherTab);
+
         //TotalHBox с общей суммой зп
         hBoxes.add(totalHBox);
         zpFlowPane.getChildren().add(totalHBox);
@@ -218,6 +226,56 @@ public class MainController {
         secondaryFlowPane.setVgap(5);
         primaryFlowPane.setVgap(5);
         zpFlowPane.setVgap(5);
+    }
+
+    /**
+     * Инициализирует Таб вкладки "Отслеживание артов"
+     * @return готовый Таб
+     */
+    private Tab articulSearcherInitialize(){
+        JsonData jsonData = JsonMapper.readFromJson();
+
+        Tab tab = new Tab("Отслеживание артов");
+        FlowPane flowPane = new FlowPane();
+        articulInfoListView = new ListView<>();
+        articulInfoListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        Button addArticulButton = new Button("Добавить");
+        Button removeArticulButton = new Button("Удалить");
+        flowPane.getChildren().addAll(articulInfoListView,addArticulButton,removeArticulButton);
+
+        articulInfoListView.getItems().setAll(jsonData.getArticulsToFindList());
+
+        //Обработка нажатия на кнопку "Добавить"
+        addArticulButton.setOnAction(actionEvent -> {
+            TextInputDialog textInputDialog = new TextInputDialog();
+            textInputDialog.setContentText("Артикул:");
+            textInputDialog.setTitle("Введите артикул");
+            textInputDialog.setHeaderText("");
+            Optional<String> optionalS = textInputDialog.showAndWait();
+            if(optionalS.isEmpty()) {
+                return;
+            }
+            if(optionalS.get().isBlank()){
+                return;
+            }
+            jsonData.getArticulsToFindList().add(optionalS.get().trim());
+            JsonMapper.writeToJson(jsonData);
+            articulInfoListView.getItems().setAll(jsonData.getArticulsToFindList());
+        });
+
+        //Обработка нажатия на кнопку "Удалить"
+        removeArticulButton.setOnAction(actionEvent ->{
+            ObservableList<String> selectedItems = articulInfoListView.getSelectionModel().getSelectedItems();
+            for(String string : selectedItems){
+                jsonData.getArticulsToFindList().remove(string);
+            }
+            JsonMapper.writeToJson(jsonData);
+            articulInfoListView.getItems().setAll(jsonData.getArticulsToFindList());
+        });
+
+
+        tab.setContent(flowPane);
+        return tab;
     }
 
 
@@ -308,6 +366,7 @@ public class MainController {
 
 
     //Поиск, подсчет и вставка планов (итоговый скрипт)
+    //c 1.13 также ищет заданные артикулы
     @FXML
     public void searchAndCalc() {
         excelConverter.convertFromExcelToList();
@@ -330,6 +389,7 @@ public class MainController {
         }
         totalZpBoxInstance.setTotalValue(String.format(Locale.US, "%.2f", totalZP));
 
+        articulInfoListView.getItems().setAll(calculator.articulSearcherLogic(articulInfoListView.getItems()));
     }
 
 

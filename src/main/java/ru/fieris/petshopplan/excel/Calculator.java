@@ -13,8 +13,9 @@ import java.util.*;
 
 //Класс проводит все вычисления из arrayList
 public class Calculator {
-    ArrayList<ExcelSellLine> arrayList;
+    private ArrayList<ExcelSellLine> arrayList;
     JsonData jsonData = JsonMapper.readFromJson();
+
 
 
     public Calculator(ArrayList<ExcelSellLine> arrayList) {
@@ -303,5 +304,31 @@ public class Calculator {
 
 
         return result;
+    }
+
+    public List<String> articulSearcherLogic(List<String> list){
+        List<String> editedList = new ArrayList<>();
+        for(String string : list){
+            LocalDate lastDateOfSale = null;
+            for(ExcelSellLine line : arrayList){
+                if(line.getArticle().equalsIgnoreCase(string)){
+                    if(Objects.isNull(lastDateOfSale)){
+                        lastDateOfSale = line.getDateOfSale();
+                    } else {
+                        if(line.getDateOfSale().isAfter(lastDateOfSale)){
+                            lastDateOfSale = line.getDateOfSale();
+                        }
+                    }
+
+                }
+            }
+            if(Objects.isNull(lastDateOfSale)){
+                editedList.add(string + " - " + "Не найдено");
+            } else {
+                editedList.add(string + " - " + lastDateOfSale);
+            }
+
+        }
+        return editedList;
     }
 }

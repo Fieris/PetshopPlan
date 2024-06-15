@@ -4,7 +4,7 @@
   <groupId>ru.Fieris</groupId>
   <artifactId>PetshopPlan</artifactId>
   <name>PetshopPlan</name>
-  <version>1.13</version>
+  <version>1.14</version>
   <build>
     <plugins>
       <plugin>
@@ -36,7 +36,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.1</version>
+        <version>3.6.0</version>
         <executions>
           <execution>
             <phase>package</phase>

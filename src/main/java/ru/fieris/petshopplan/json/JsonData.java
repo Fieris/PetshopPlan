@@ -14,8 +14,15 @@ public class JsonData {
     private ArrayList<PrimaryBrandCategory> primaryBrandCategories;
     private ArrayList<ConditionCategory> conditionCategories;
     private ArrayList<SecondaryBrandCategory> secondaryBrandCategories;
+    private ArrayList<String> articulsToFindList = new ArrayList<>();
 
+    public ArrayList<String> getArticulsToFindList() {
+        return articulsToFindList;
+    }
 
+    public void setArticulsToFindList(ArrayList<String> articulsToFindList) {
+        this.articulsToFindList = articulsToFindList;
+    }
 
     public ArrayList<PrimaryBrandCategory> getPrimaryBrandCategories() {
         return primaryBrandCategories;
