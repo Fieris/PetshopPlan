@@ -4,9 +4,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -17,7 +17,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ru.fieris.petshopplan.Application;
 import ru.fieris.petshopplan.actionevents.MenuItemExcelOpenAction;
@@ -94,7 +93,7 @@ public class MainController {
     TotalHBox totalHBox = new TotalHBox(HBoxStyles.ZP);
 
     //Лист с артикулами для поиска
-    private ListView<String> articulInfoListView;
+    private TableView<ArticulToFindInstance> articulInfoTableView;
 
     @FXML
     public void initialize() {
@@ -237,13 +236,29 @@ public class MainController {
 
         Tab tab = new Tab("Отслеживание артов");
         FlowPane flowPane = new FlowPane();
-        articulInfoListView = new ListView<>();
-        articulInfoListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        //Инициализация таблички
+        articulInfoTableView = new TableView<>();
+        articulInfoTableView.setPrefSize(300,400);
+        articulInfoTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        TableColumn<ArticulToFindInstance,String> articulColumn = new TableColumn<>("Артикул");
+        articulColumn.setCellValueFactory(new PropertyValueFactory<>("articul"));
+        TableColumn<ArticulToFindInstance, String> dateColumn = new TableColumn<>("Дата продажи");
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("lastDateOfSale"));
+        TableColumn<ArticulToFindInstance, String> commentColumn = new TableColumn<>("Комментарий");
+        commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
+
+        articulInfoTableView.getColumns().add(articulColumn);
+        articulInfoTableView.getColumns().add(dateColumn);
+        articulInfoTableView.getColumns().add(commentColumn);
+
         Button addArticulButton = new Button("Добавить");
         Button removeArticulButton = new Button("Удалить");
-        flowPane.getChildren().addAll(articulInfoListView,addArticulButton,removeArticulButton);
+        Button commentArticulButton = new Button("Комментарий");
+        flowPane.getChildren().addAll(articulInfoTableView,addArticulButton,removeArticulButton,commentArticulButton);
 
-        articulInfoListView.getItems().setAll(jsonData.getArticulsToFindList());
+        articulInfoTableView.getItems().setAll(jsonData.getArticulsToFindList());
+
 
         //Обработка нажатия на кнопку "Добавить"
         addArticulButton.setOnAction(actionEvent -> {
@@ -258,19 +273,38 @@ public class MainController {
             if(optionalS.get().isBlank()){
                 return;
             }
-            jsonData.getArticulsToFindList().add(optionalS.get().trim());
+            jsonData.getArticulsToFindList().add(new ArticulToFindInstance(optionalS.get().trim()));
             JsonMapper.writeToJson(jsonData);
-            articulInfoListView.getItems().setAll(jsonData.getArticulsToFindList());
+            articulInfoTableView.getItems().setAll(jsonData.getArticulsToFindList());
         });
 
         //Обработка нажатия на кнопку "Удалить"
         removeArticulButton.setOnAction(actionEvent ->{
-            ObservableList<String> selectedItems = articulInfoListView.getSelectionModel().getSelectedItems();
-            for(String string : selectedItems){
-                jsonData.getArticulsToFindList().remove(string);
+            ObservableList<ArticulToFindInstance> selectedItems = articulInfoTableView.getSelectionModel().getSelectedItems();
+            for(ArticulToFindInstance instance : selectedItems){
+                jsonData.getArticulsToFindList().remove(instance);
             }
             JsonMapper.writeToJson(jsonData);
-            articulInfoListView.getItems().setAll(jsonData.getArticulsToFindList());
+            articulInfoTableView.getItems().setAll(jsonData.getArticulsToFindList());
+        });
+
+        //Обработка нажатия на кнопку "Комментарий"
+        commentArticulButton.setOnAction(actionEvent -> {
+            if(articulInfoTableView.getSelectionModel().getSelectedItems().isEmpty()) return;
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setHeaderText("");
+            dialog.setTitle("Введите комментарий");
+            dialog.setContentText("Комментарий:");
+            Optional<String> optionalS = dialog.showAndWait();
+            if(optionalS.isEmpty()) return;
+            if(optionalS.get().isBlank()) return;
+
+            ObservableList<ArticulToFindInstance> selectedItems = articulInfoTableView.getSelectionModel().getSelectedItems();
+            for(ArticulToFindInstance instance : selectedItems){
+                jsonData.getArticulsToFindList().get(jsonData.getArticulsToFindList().indexOf(instance)).setComment(optionalS.get().trim());
+            }
+            JsonMapper.writeToJson(jsonData);
+            articulInfoTableView.getItems().setAll(jsonData.getArticulsToFindList());
         });
 
 
@@ -389,7 +423,7 @@ public class MainController {
         }
         totalZpBoxInstance.setTotalValue(String.format(Locale.US, "%.2f", totalZP));
 
-        articulInfoListView.getItems().setAll(calculator.articulSearcherLogic(articulInfoListView.getItems()));
+        articulInfoTableView.getItems().setAll(calculator.articulSearcherLogic(articulInfoTableView.getItems()));
     }
 
 

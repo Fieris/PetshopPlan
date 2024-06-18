@@ -1,5 +1,6 @@
 package ru.fieris.petshopplan.excel;
 
+import ru.fieris.petshopplan.json.ArticulToFindInstance;
 import ru.fieris.petshopplan.json.categories.PrimaryBrandCategory;
 import ru.fieris.petshopplan.json.JsonData;
 import ru.fieris.petshopplan.json.JsonMapper;
@@ -306,12 +307,12 @@ public class Calculator {
         return result;
     }
 
-    public List<String> articulSearcherLogic(List<String> list){
-        List<String> editedList = new ArrayList<>();
-        for(String string : list){
+    public List<ArticulToFindInstance> articulSearcherLogic(List<ArticulToFindInstance> list){
+        List<ArticulToFindInstance> editedList = new ArrayList<>();
+        for(ArticulToFindInstance instance : list){
             LocalDate lastDateOfSale = null;
             for(ExcelSellLine line : arrayList){
-                if(line.getArticle().equalsIgnoreCase(string)){
+                if(line.getArticle().equalsIgnoreCase(instance.getArticul())){
                     if(Objects.isNull(lastDateOfSale)){
                         lastDateOfSale = line.getDateOfSale();
                     } else {
@@ -321,13 +322,14 @@ public class Calculator {
                     }
 
                 }
+
             }
             if(Objects.isNull(lastDateOfSale)){
-                editedList.add(string + " - " + "Не найдено");
+                instance.setLastDateOfSale("Не найден");
             } else {
-                editedList.add(string + " - " + lastDateOfSale);
+                instance.setLastDateOfSale(lastDateOfSale.toString());
             }
-
+            editedList.add(instance);
         }
         return editedList;
     }

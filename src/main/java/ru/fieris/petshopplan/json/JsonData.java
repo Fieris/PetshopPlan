@@ -14,13 +14,13 @@ public class JsonData {
     private ArrayList<PrimaryBrandCategory> primaryBrandCategories;
     private ArrayList<ConditionCategory> conditionCategories;
     private ArrayList<SecondaryBrandCategory> secondaryBrandCategories;
-    private ArrayList<String> articulsToFindList = new ArrayList<>();
+    private ArrayList<ArticulToFindInstance> articulsToFindList = new ArrayList<ArticulToFindInstance>();
 
-    public ArrayList<String> getArticulsToFindList() {
+    public ArrayList<ArticulToFindInstance> getArticulsToFindList() {
         return articulsToFindList;
     }
 
-    public void setArticulsToFindList(ArrayList<String> articulsToFindList) {
+    public void setArticulsToFindList(ArrayList<ArticulToFindInstance> articulsToFindList) {
         this.articulsToFindList = articulsToFindList;
     }
 

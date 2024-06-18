@@ -5,6 +5,8 @@ module ru.fieris.petshopplan {
     requires com.fasterxml.jackson.databind;
     requires javafx.web;
     requires com.dustinredmond.fxtrayicon;
+    requires static lombok;
+    requires junit;
 
 
     opens ru.fieris.petshopplan to javafx.fxml;
@@ -18,4 +20,5 @@ module ru.fieris.petshopplan {
     exports ru.fieris.petshopplan.json.categories.conditionCategory;
     exports ru.fieris.petshopplan.customControls.HBoxes;
     exports ru.fieris.petshopplan.customControls.HBoxes.PlanHBoxes;
+    exports ru.fieris.petshopplan.Tests;
 }
