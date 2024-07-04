@@ -9,10 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.web.WebView;
@@ -72,6 +69,8 @@ public class MainController {
     //label с текущей датой
     @FXML
     private Label lblDate;
+
+    public final Font defaultFont = new Font("Arial", 13);
 
     /**
      * Stage выполнение в день
@@ -235,29 +234,51 @@ public class MainController {
         JsonData jsonData = JsonMapper.readFromJson();
 
         Tab tab = new Tab("Отслеживание артов");
-        FlowPane flowPane = new FlowPane();
+        AnchorPane anchorPane = new AnchorPane();
+
 
         //Инициализация таблички
         articulInfoTableView = new TableView<>();
-        articulInfoTableView.setPrefSize(300,400);
+        articulInfoTableView.setPlaceholder(new Label("Нет данных"));
+        articulInfoTableView.setPrefSize(600,400);
         articulInfoTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         TableColumn<ArticulToFindInstance,String> articulColumn = new TableColumn<>("Артикул");
         articulColumn.setCellValueFactory(new PropertyValueFactory<>("articul"));
+        articulColumn.setPrefWidth(100);
         TableColumn<ArticulToFindInstance, String> dateColumn = new TableColumn<>("Дата продажи");
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("lastDateOfSale"));
+        dateColumn.setPrefWidth(150);
         TableColumn<ArticulToFindInstance, String> commentColumn = new TableColumn<>("Комментарий");
         commentColumn.setCellValueFactory(new PropertyValueFactory<>("comment"));
+        commentColumn.setPrefWidth(300);
+
+
+
 
         articulInfoTableView.getColumns().add(articulColumn);
         articulInfoTableView.getColumns().add(dateColumn);
         articulInfoTableView.getColumns().add(commentColumn);
 
         Button addArticulButton = new Button("Добавить");
+        addArticulButton.setFont(defaultFont);
+        addArticulButton.setLayoutY(405);
         Button removeArticulButton = new Button("Удалить");
+        removeArticulButton.setFont(defaultFont);
+        removeArticulButton.setLayoutY(405);
+        removeArticulButton.setLayoutX(80);
         Button commentArticulButton = new Button("Комментарий");
-        flowPane.getChildren().addAll(articulInfoTableView,addArticulButton,removeArticulButton,commentArticulButton);
+        commentArticulButton.setFont(defaultFont);
+        commentArticulButton.setLayoutY(405);
+        commentArticulButton.setLayoutX(153);
+
+
+
+        anchorPane.getChildren().addAll(articulInfoTableView,addArticulButton,removeArticulButton,commentArticulButton);
 
         articulInfoTableView.getItems().setAll(jsonData.getArticulsToFindList());
+
+
+
 
 
         //Обработка нажатия на кнопку "Добавить"
@@ -280,7 +301,24 @@ public class MainController {
 
         //Обработка нажатия на кнопку "Удалить"
         removeArticulButton.setOnAction(actionEvent ->{
+            //Confirmation alert
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.OK, ButtonType.CANCEL);
+            alert.setTitle("Подтвердить удаление");
+            alert.setHeaderText("");
+
+
+
+            //Лист выбранных элементов
             ObservableList<ArticulToFindInstance> selectedItems = articulInfoTableView.getSelectionModel().getSelectedItems();
+            if(selectedItems.isEmpty()) return;
+
+            //Подтверждение удаления
+            alert.setContentText("Удалить " + selectedItems.size() + " элементов?");
+            Optional<ButtonType> optionalButtonType = alert.showAndWait();
+            if(optionalButtonType.isPresent() && !optionalButtonType.get().equals(ButtonType.OK)) return;
+
+
+
             for(ArticulToFindInstance instance : selectedItems){
                 jsonData.getArticulsToFindList().remove(instance);
             }
@@ -308,7 +346,7 @@ public class MainController {
         });
 
 
-        tab.setContent(flowPane);
+        tab.setContent(anchorPane);
         return tab;
     }
 

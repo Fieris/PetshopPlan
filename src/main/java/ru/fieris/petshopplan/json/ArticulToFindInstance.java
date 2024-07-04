@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
-@Getter
 public class ArticulToFindInstance {
     private String articul;
     private String lastDateOfSale;
@@ -29,5 +27,29 @@ public class ArticulToFindInstance {
         this.articul = "-";
         this.comment = "-";
         this.lastDateOfSale = "-";
+    }
+
+    public String getArticul() {
+        return articul;
+    }
+
+    public void setArticul(String articul) {
+        this.articul = articul;
+    }
+
+    public String getLastDateOfSale() {
+        return lastDateOfSale;
+    }
+
+    public void setLastDateOfSale(String lastDateOfSale) {
+        this.lastDateOfSale = lastDateOfSale;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

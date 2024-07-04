@@ -9,7 +9,6 @@ import javafx.scene.input.TransferMode;
 import javafx.stage.Stage;
 import ru.fieris.petshopplan.controllers.MainController;
 import com.dustinredmond.fxtrayicon.*;
-import ru.fieris.petshopplan.excel.ExcelConverter;
 
 
 import java.io.IOException;
@@ -17,10 +16,9 @@ import java.util.EventObject;
 import java.util.Objects;
 
 public class Application extends javafx.application.Application {
-    public static final String VERSION = "1.15";
+    public static final String VERSION = "1.16";
     private static Stage mainStage = null;
     private static MainController mainController = null;
-    private FXTrayIcon trayIcon = null;
 
 
     @Override
