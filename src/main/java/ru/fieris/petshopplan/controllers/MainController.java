@@ -333,6 +333,7 @@ public class MainController {
             dialog.setHeaderText("");
             dialog.setTitle("Введите комментарий");
             dialog.setContentText("Комментарий:");
+            dialog.getEditor().setText(articulInfoTableView.getSelectionModel().getSelectedItems().get(0).getComment());
             Optional<String> optionalS = dialog.showAndWait();
             if(optionalS.isEmpty()) return;
             if(optionalS.get().isBlank()) return;
